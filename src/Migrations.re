@@ -28,8 +28,8 @@ CREATE TABLE $(namespace)_issues (
   status VARCHAR(128) NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT unique_uuid UNIQUE KEY (uuid),
-  FOREIGN KEY (assignee) REFERENCES users_users(id),
-  FOREIGN KEY (board) REFERENCES issues_boards(id)
+  FOREIGN KEY(assignee) REFERENCES users_users(id),
+  FOREIGN KEY(board) REFERENCES issues_boards(id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 |j},
     ),
