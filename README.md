@@ -1,6 +1,11 @@
 # Issue management app
 
-This issue management app showcases Sihl. It uses `sihl-users` for user management.
+This issue management app showcases Sihl. It uses `@sihl/users` for user management.
+
+![Screenshot](/images/screen1.png)
+![Screenshot](/images/screen2.png)
+![Screenshot](/images/screen3.png)
+![Screenshot](/images/screen4.png)
 
 ## Getting started
 

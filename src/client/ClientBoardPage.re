@@ -130,7 +130,7 @@ module Issue = {
             {React.string("Completed")}
           </span>;
 
-    <div className="box">
+    <div className="box" style={ReactDOMRe.Style.make(~minHeight="8em", ())}>
       statusBadge
       <h4 className="is-4 title"> {React.string(issue.title)} </h4>
       {issue.description
