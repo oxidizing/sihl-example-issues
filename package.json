@@ -2,9 +2,9 @@
   "name": "sihl-example-issues",
   "version": "0.0.1",
   "scripts": {
-    "build": "bsb -make-world",
+    "build": "bsb -make-world && parcel build static/index.html --public-url /asset/",
     "watch:build": "bsb -make-world -w",
-    "start": "yarn build && yarn bundle && yarn sihl start",
+    "start": "yarn sihl start",
     "clean": "bsb -clean-world",
     "bundle": "parcel build static/index.html --public-url /asset/",
     "watch:bundle": "parcel watch static/index.html --public-url /asset/",
