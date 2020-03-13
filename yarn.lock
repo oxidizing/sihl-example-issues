@@ -983,10 +983,10 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@sihl/core@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.2.tgz#d19f91317be304644497082219068ddfb9c30a53"
-  integrity sha512-IvzsscMcVHKgsQP01/i7hxioz9A5YVN6PaqlH1m/f+CYh6KAkM5eSpup+iyPnL4KE1XeWGH0PM2MPDOUAl8iFw==
+"@sihl/core@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.5.tgz#61f785d57c6e90a1687c9dd8b7331efaf0a87172"
+  integrity sha512-XzvObI+Ol9UjEEF2J/92uyo9GlfUl2Lu9rudxqbLDg4iRveT9EodnATHoZ67Hhipl+GIMPzEnqsOQKIlE4+Ucw==
   dependencies:
     "@glennsl/bs-jest" "^0.4.9"
     bcrypt "^3.0.8"
@@ -997,26 +997,12 @@
     isomorphic-fetch "^2.2.1"
     mysql2 "^2.1.0"
 
-"@sihl/core@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.4.tgz#7520833dfdc9c3fb89bcca2f6cca2285d18cb629"
-  integrity sha512-ei4obNzCfIbwSRS3O8e/5TghZQ2YDa7ZmmxytSFdJC6b/TabolumePPweCUXf+1wnxv7UlKdnogABHTVC/NkIw==
+"@sihl/users@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.5.tgz#1aba729b8610994842d97db31a65d91cc7a4721e"
+  integrity sha512-4UH349T5dC+CqB6p8IU1Xp2hy4oZwbenfmUeC5te/2xV8osRCJ4+R38thm/Pv+HcFrvEfKDJlEM4eleHc3sq3g==
   dependencies:
-    "@glennsl/bs-jest" "^0.4.9"
-    bcrypt "^3.0.8"
-    bluebird "^3.7.2"
-    body-parser "^1.19.0"
-    bs-express "^1.0.1"
-    cookie-parser "^1.4.4"
-    isomorphic-fetch "^2.2.1"
-    mysql2 "^2.1.0"
-
-"@sihl/users@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.4.tgz#56750c0041aa551bae3165d8e74923f53a50e46c"
-  integrity sha512-BI057EPr2+3x/Kl208oB+1OhhWX9MDJv94QZ97u0eU4wRp/bv2DYY9UchUF6ias+brFmuY09CYFjPUItI/SUnw==
-  dependencies:
-    "@sihl/core" "0.0.2"
+    "@sihl/core" "0.0.5"
     bs-fetch "^0.5.1"
     bs-let "^0.1.16"
     compression "^1.7.4"
