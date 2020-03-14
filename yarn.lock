@@ -983,10 +983,10 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@sihl/core@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.6.tgz#d22ea1f1eb94e24075b5ae4e23fdbc3f2d9b32cf"
-  integrity sha512-VNCZwxyDGy1eQUUerQh53oL/XkYow5NuUrtWUxVomgts6Pl4L+KW2pACqFjpcn8kof80AMbfoNj98OPgClTLWA==
+"@sihl/core@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.7.tgz#7a89b1c7aa7c27598e394de22ef202a6daeeadac"
+  integrity sha512-Tvz1AUUrVFkyY+2XPi1ycpfiTQxdczHVitmEgdY1nYbLl02fc3xWL/OWlS8x8GZVe10Q47S6OeoE0DqyzekzBA==
   dependencies:
     "@glennsl/bs-jest" "^0.4.9"
     bcrypt "^3.0.8"
@@ -997,12 +997,12 @@
     isomorphic-fetch "^2.2.1"
     mysql2 "^2.1.0"
 
-"@sihl/users@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.6.tgz#628365d02216b9037c5e5fe2397fb0a33f68dad3"
-  integrity sha512-e/6fWZa1ZnAoM4Yn+z4WrJa8eZhoqRmwecgqe4qoJizbl65bsW0q3Pt6o5M3X8eVshBo8lVs67IxJ5aMb32GHQ==
+"@sihl/users@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.7.tgz#b22da7f9df958f2828724e80e98edb7941f2a1da"
+  integrity sha512-GiBeZKTFpJWFtboiG+jIu9Y493LhSDp70ET9M6xaYYhS1+aXdzw0jJ1UOQifBYE969iWHHTGB2FUlHfj/h2K/Q==
   dependencies:
-    "@sihl/core" "0.0.6"
+    "@sihl/core" "0.0.7"
     bs-fetch "^0.5.1"
     bs-let "^0.1.16"
     compression "^1.7.4"
