@@ -144,7 +144,7 @@ module Client = {
     let endpoint = () =>
       Sihl.Core.Http.endpoint({
         verb: GET,
-        path: {j|(/app|/app/*)|j},
+        path: {j|(/|/app|/app/*)|j},
         handler: _ => {
           open! Sihl.Core.Http.Endpoint;
           Async.async @@ Sihl.Core.Http.Endpoint.OkFile("dist/index.html");
