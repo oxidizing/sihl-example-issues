@@ -9,7 +9,7 @@
     "build": "yarn compile && yarn bundle",
     "watch:compile": "bsb -make-world -w",
     "watch:bundle": "parcel watch static/index.html --public-url /asset/",
-    "start": "yarn sihl start",
+    "start": "yarn build && yarn sihl start",
     "test": "DATABASE_URL=mysql://root:password@localhost:3306/dev jest"
   },
   "keywords": [
