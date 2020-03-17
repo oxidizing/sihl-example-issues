@@ -187,7 +187,8 @@ module AddBoard = {
     </div>;
   };
 };
-module Boards = {
+
+module SelectBoard = {
   let selectedBoard = () => {
     let url = ReasonReactRouter.useUrl();
     switch (url.path) {
@@ -198,32 +199,37 @@ module Boards = {
 
   [@react.component]
   let make = (~dispatch, ~boards) => {
-    <div>
-      <AddBoard dispatch />
-      <div className="field">
-        <p className="control">
-          <span className="select">
-            <select
-              value={selectedBoard()->Belt.Option.getWithDefault("select")}
-              onChange={event => {
-                let value = ReactEvent.Form.target(event)##value;
-                value === "select"
-                  ? dispatch(UnselectBoard) : dispatch(SelectBoard(value));
-              }}>
-              <option value="select"> {React.string("Select board")} </option>
-              {boards
-               ->Belt.List.map((board: Model.Board.t) =>
-                   <option key={board.id} value={board.id}>
-                     {React.string(board.title)}
-                   </option>
-                 )
-               ->Belt.List.toArray
-               ->React.array}
-            </select>
-          </span>
-        </p>
-      </div>
+    <div className="field">
+      <p className="control">
+        <span className="select">
+          <select
+            value={selectedBoard()->Belt.Option.getWithDefault("select")}
+            onChange={event => {
+              let value = ReactEvent.Form.target(event)##value;
+              value === "select"
+                ? dispatch(Action.UnselectBoard)
+                : dispatch(Action.SelectBoard(value));
+            }}>
+            <option value="select"> {React.string("Select board")} </option>
+            {boards
+             ->Belt.List.map((board: Model.Board.t) =>
+                 <option key={board.id} value={board.id}>
+                   {React.string(board.title)}
+                 </option>
+               )
+             ->Belt.List.toArray
+             ->React.array}
+          </select>
+        </span>
+      </p>
     </div>;
+  };
+};
+
+module Boards = {
+  [@react.component]
+  let make = (~dispatch, ~boards) => {
+    <div> <AddBoard dispatch /> <SelectBoard dispatch boards /> </div>;
   };
 };
 
@@ -306,8 +312,8 @@ module Board = {
           let%Async result = ClientApi.Board.Issues.f(~boardId);
           Async.async(
             switch (result) {
-            | Belt.Result.Ok(issues) => dispatch(Action.SetIssues(issues))
-            | Belt.Result.Error(msg) => setError(_ => Some(msg))
+            | Ok(issues) => dispatch(Action.SetIssues(issues))
+            | Error(msg) => setError(_ => Some(msg))
             },
           );
         }
@@ -345,7 +351,6 @@ module AddIssue = {
     let (description, setDescription) = React.useState(_ => None);
     let (_, setError) =
       React.useContext(ClientContextProvider.Error.context);
-    let addIssue = addIssue(setError, dispatch);
 
     <div style={ReactDOMRe.Style.make(~marginBottom="2em", ())}>
       <div className="field">

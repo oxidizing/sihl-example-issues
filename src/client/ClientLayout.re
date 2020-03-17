@@ -1,3 +1,5 @@
+module Async = Sihl.Core.Async;
+
 module LoginRegister = {
   [@react.component]
   let make = () => {
@@ -45,6 +47,30 @@ module Logout = {
 
 [@react.component]
 let make = (~children) => {
+  let (hasValidSession, setHasValidSession) =
+    React.useState(_ => ClientSession.has());
+
+  React.useEffect1(
+    _ => {
+      {
+        let%Async result = ClientApi.User.Me.f();
+        Async.async(
+          switch (result) {
+          | Ok(_) =>
+            ReasonReactRouter.push("/app/boards/");
+            setHasValidSession(_ => true);
+          | Error(_) =>
+            ClientSession.end_();
+            setHasValidSession(_ => false);
+          },
+        );
+      }
+      ->ignore;
+      None;
+    },
+    [|ClientSession.get().token|],
+  );
+
   <div>
     <section className="hero is-small is-primary is-bold">
       <div className="hero-body">
@@ -58,7 +84,7 @@ let make = (~children) => {
             </div>
           </div>
           <div className="column is-one-quarter">
-            {ClientSession.has() ? <Logout /> : <LoginRegister />}
+            {hasValidSession ? <Logout /> : <LoginRegister />}
           </div>
         </div>
       </div>

@@ -7,6 +7,16 @@ module Http = {
   };
 };
 
+let redirectIfNotAuthorized = response => {
+  response->Async.let_(r => {
+    let status = Fetch.Response.status(r);
+    if (status === 401) {
+      ReasonReactRouter.push("/app/login/");
+    };
+    response;
+  });
+};
+
 let decodeRespone = (response, decode) => {
   Async.catchAsync(
     {
@@ -88,6 +98,7 @@ module Board = {
           (),
         ),
       )
+      |> redirectIfNotAuthorized
       |> decodeResult(~decode=t_decode);
     };
   };
@@ -181,6 +192,23 @@ module Issue = {
 };
 
 module User = {
+  module Me = {
+    let f = () => {
+      Fetch.fetchWithInit(
+        ClientConfig.baseUrl() ++ "/users/users/me/",
+        Fetch.RequestInit.make(
+          ~method_=Get,
+          ~headers=
+            Fetch.HeadersInit.make({
+              "authorization": ClientSession.get().token,
+            }),
+          (),
+        ),
+      )
+      |> decodeResult(~decode=SihlUsers.Model.User.t_decode);
+    };
+  };
+
   module Login = {
     [@decco]
     type t = {

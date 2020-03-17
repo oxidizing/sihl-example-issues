@@ -3,6 +3,7 @@ module Async = Sihl.Core.Async;
 module Board = ClientBoardPage;
 module Register = ClientRegisterPage;
 module Login = ClientLoginPage;
+module NotFound = ClientNotFound;
 
 module Route = {
   [@react.component]
@@ -12,7 +13,7 @@ module Route = {
     | ["app", "login"] => <Login />
     | ["app", "register"] => <Register />
     | ["app", "boards", ..._] => <Board />
-    | _ => <Login />
+    | _ => <NotFound />
     };
   };
 };

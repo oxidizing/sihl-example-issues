@@ -18,11 +18,7 @@ let get = () => {
       getItem("/users/userId", localStorage),
     ) {
     | (Some(token), Some(userId)) => {token, userId}
-    | _ =>
-      ReasonReactRouter.push("/app/login");
-      let _ = removeItem("/users/token");
-      let _ = removeItem("/users/userId");
-      raise(SessionFetchException);
+    | _ => {token: "no session found", userId: "no session found"}
     }
   );
 };
