@@ -6,11 +6,10 @@ module Login = ClientLoginPage;
 module State = {
   type t = {
     boards: list(Model.Board.t),
-    selectedBoard: option(string),
     issues: list(Model.Issue.t),
   };
 
-  let default = {boards: [], selectedBoard: None, issues: []};
+  let default = {boards: [], issues: []};
 
   let setIssues = (state, ~issues) => {
     {...state, issues};
@@ -87,14 +86,6 @@ module State = {
       boards: Belt.List.keep(state.boards, board => board.id !== boardId),
     };
   };
-
-  let selectBoard = (state, ~boardId) => {
-    {...state, selectedBoard: Some(boardId)};
-  };
-
-  let unselectBoard = state => {
-    {...state, selectedBoard: None};
-  };
 };
 
 module Action = {
@@ -108,9 +99,7 @@ module Action = {
     | StartAddBoard(string, string)
     | SucceedAddBoard(string, Model.Board.t)
     | FailAddBoard(string)
-    | SetBoards(list(Model.Board.t))
-    | SelectBoard(string)
-    | UnselectBoard;
+    | SetBoards(list(Model.Board.t));
 
   let reducer = (state, action) =>
     switch (state, action) {
@@ -128,12 +117,6 @@ module Action = {
     | (state, SucceedAddBoard(oldBoardId, board)) =>
       State.updateBoard(state, ~oldBoardId, ~board)
     | (state, FailAddBoard(boardId)) => State.removeBoard(state, ~boardId)
-    | (state, SelectBoard(boardId)) =>
-      ReasonReactRouter.push("/app/boards/" ++ boardId);
-      State.selectBoard(state, ~boardId);
-    | (state, UnselectBoard) =>
-      ReasonReactRouter.push("/app/boards/");
-      State.unselectBoard(state);
     | (state, SetIssues(issues)) => State.setIssues(state, ~issues)
     | (state, SetBoards(boards)) => State.setBoards(state, ~boards)
     };
@@ -172,11 +155,11 @@ module AddBoard = {
                | Ok(board) =>
                  setTitle(_ => "");
                  dispatch(Action.SucceedAddBoard(boardId, board));
-                 dispatch(Action.SelectBoard(board.id));
+                 ReasonReactRouter.push("/app/boards/" ++ boardId);
                | Error(msg) =>
                  setError(_ => Some("Failed create board: " ++ msg));
                  dispatch(Action.FailAddBoard(boardId));
-                 dispatch(Action.UnselectBoard);
+                 ReasonReactRouter.push("/app/boards/");
                },
              )}
             ->ignore;
@@ -198,7 +181,7 @@ module SelectBoard = {
   };
 
   [@react.component]
-  let make = (~dispatch, ~boards) => {
+  let make = (~boards) => {
     <div className="field">
       <p className="control">
         <span className="select">
@@ -206,9 +189,11 @@ module SelectBoard = {
             value={selectedBoard()->Belt.Option.getWithDefault("select")}
             onChange={event => {
               let value = ReactEvent.Form.target(event)##value;
-              value === "select"
-                ? dispatch(Action.UnselectBoard)
-                : dispatch(Action.SelectBoard(value));
+              if (value === "select") {
+                ReasonReactRouter.push("/app/boards/");
+              } else {
+                ReasonReactRouter.push("/app/boards/" ++ value);
+              };
             }}>
             <option value="select"> {React.string("Select board")} </option>
             {boards
@@ -229,7 +214,7 @@ module SelectBoard = {
 module Boards = {
   [@react.component]
   let make = (~dispatch, ~boards) => {
-    <div> <AddBoard dispatch /> <SelectBoard dispatch boards /> </div>;
+    <div> <AddBoard dispatch /> <SelectBoard boards /> </div>;
   };
 };
 
@@ -413,7 +398,6 @@ module AddIssue = {
 let make = () => {
   let (state, dispatch) = React.useReducer(Action.reducer, State.default);
   let (_, setError) = React.useContext(ClientContextProvider.Error.context);
-  let url = ReasonReactRouter.useUrl();
 
   React.useEffect1(
     () => {
@@ -439,15 +423,13 @@ let make = () => {
       </div>
       <div className="column is-one-third">
         <h2 className="title is-2"> {React.string("Issues")} </h2>
-        {switch (url.path) {
-         | ["app", "boards"] =>
-           <span> {React.string("Please select a board")} </span>
-         | ["app", "boards", boardId] =>
+        {switch (SelectBoard.selectedBoard()) {
+         | None => <span> {React.string("Please select a board")} </span>
+         | Some(boardId) =>
            <div>
              <AddIssue dispatch boardId />
              <Board issues={Some(state.issues)} dispatch boardId />
            </div>
-         | _ => <Login />
          }}
       </div>
     </div>

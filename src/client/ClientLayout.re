@@ -45,6 +45,30 @@ module Logout = {
   };
 };
 
+module ForwardIfLoggedIn = {
+  [@react.component]
+  let make = (~children, ~url) => {
+    React.useEffect1(
+      _ => {
+        {
+          let%Async result = ClientApi.User.Me.f();
+          Async.async(
+            switch (result) {
+            | Ok(_) => ReasonReactRouter.push(url)
+            | Error(_) => ClientSession.end_()
+            },
+          );
+        }
+        ->ignore;
+        None;
+      },
+      [|ClientSession.get().token|],
+    );
+
+    children;
+  };
+};
+
 [@react.component]
 let make = (~children) => {
   let (hasValidSession, setHasValidSession) =
@@ -56,9 +80,7 @@ let make = (~children) => {
         let%Async result = ClientApi.User.Me.f();
         Async.async(
           switch (result) {
-          | Ok(_) =>
-            ReasonReactRouter.push("/app/boards/");
-            setHasValidSession(_ => true);
+          | Ok(_) => setHasValidSession(_ => true)
           | Error(_) =>
             ClientSession.end_();
             setHasValidSession(_ => false);

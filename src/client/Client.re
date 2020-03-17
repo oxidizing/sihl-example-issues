@@ -10,9 +10,16 @@ module Route = {
   let make = () => {
     let url = ReasonReactRouter.useUrl();
     switch (url.path) {
-    | ["app", "login"] => <Login />
-    | ["app", "register"] => <Register />
-    | ["app", "boards", ..._] => <Board />
+    | ["app", "login"] =>
+      <ClientLayout.ForwardIfLoggedIn url="/app/boards/">
+        <Login />
+      </ClientLayout.ForwardIfLoggedIn>
+    | ["app", "register"] =>
+      <ClientLayout.ForwardIfLoggedIn url="/app/boards/">
+        <Register />
+      </ClientLayout.ForwardIfLoggedIn>
+    | ["app", "boards", ..._]
+    | [] => <Board />
     | _ => <NotFound />
     };
   };
