@@ -17,10 +17,11 @@ You can check out the live demo here: [https://sihl-example-issues.oxidizing.io/
 
 ## Description
 
-admin ui
-reasonreact with parcel
-react app uses backend models
-integration tests with jest
+- Admin UI for users, boards and issues
+- Uses backend models in the react client
+- Optimistic rendering with error handling
+- Client logic testable thanks to redux
+- Integration tests with jest
 
 It uses [@sihl/users](https://www.npmjs.com/package/@sihl/users) for user management.
 
