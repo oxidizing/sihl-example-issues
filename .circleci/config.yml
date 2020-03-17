@@ -15,10 +15,10 @@ jobs:
           command: yarn
       - run:
           name: build
-          command: build
+          command: yarn build
       - run:
           name: test
-          command: test
+          command: yarn test
 
 workflows:
   version: 2
