@@ -128,8 +128,12 @@ module Action = {
     | (state, SucceedAddBoard(oldBoardId, board)) =>
       State.updateBoard(state, ~oldBoardId, ~board)
     | (state, FailAddBoard(boardId)) => State.removeBoard(state, ~boardId)
-    | (state, SelectBoard(boardId)) => State.selectBoard(state, ~boardId)
-    | (state, UnselectBoard) => State.unselectBoard(state)
+    | (state, SelectBoard(boardId)) =>
+      ReasonReactRouter.push("/app/boards/" ++ boardId);
+      State.selectBoard(state, ~boardId);
+    | (state, UnselectBoard) =>
+      ReasonReactRouter.push("/app/boards/");
+      State.unselectBoard(state);
     | (state, SetIssues(issues)) => State.setIssues(state, ~issues)
     | (state, SetBoards(boards)) => State.setBoards(state, ~boards)
     };
@@ -162,12 +166,13 @@ module AddBoard = {
             ReactEvent.Mouse.preventDefault(event);
             {let boardId = Sihl.Core.Uuid.V4.uuidv4();
              dispatch(Action.StartAddBoard(boardId, title));
-             dispatch(Action.SelectBoard(boardId));
              let%Async result = ClientApi.Board.Add.f(~title);
              Async.async(
                switch (result) {
                | Ok(board) =>
-                 dispatch(Action.SucceedAddBoard(boardId, board))
+                 setTitle(_ => "");
+                 dispatch(Action.SucceedAddBoard(boardId, board));
+                 dispatch(Action.SelectBoard(board.id));
                | Error(msg) =>
                  setError(_ => Some("Failed create board: " ++ msg));
                  dispatch(Action.FailAddBoard(boardId));
@@ -202,13 +207,8 @@ module Boards = {
               value={selectedBoard()->Belt.Option.getWithDefault("select")}
               onChange={event => {
                 let value = ReactEvent.Form.target(event)##value;
-                if (value === "select") {
-                  dispatch(UnselectBoard);
-                  ReasonReactRouter.push("/app/boards/");
-                } else {
-                  dispatch(SelectBoard(value));
-                  ReasonReactRouter.push("/app/boards/" ++ value);
-                };
+                value === "select"
+                  ? dispatch(UnselectBoard) : dispatch(SelectBoard(value));
               }}>
               <option value="select"> {React.string("Select board")} </option>
               {boards
@@ -379,8 +379,24 @@ module AddIssue = {
         className="button is-info"
         onClick={event => {
           ReactEvent.Mouse.preventDefault(event);
-          let _ = addIssue(~boardId, ~title, ~description);
-          ();
+          let issueId = Sihl.Core.Uuid.V4.uuidv4();
+          dispatch(
+            Action.StartAddIssue(issueId, boardId, title, description),
+          );
+          {let%Async result =
+             ClientApi.Issue.Add.f(~boardId, ~title, ~description);
+           Async.async(
+             switch (result) {
+             | Belt.Result.Ok(issue) =>
+               setTitle(_ => "");
+               setDescription(_ => None);
+               dispatch(SucceedAddIssue(issueId, issue));
+             | Belt.Result.Error(msg) =>
+               setError(_ => Some("Failed create issue: " ++ msg));
+               dispatch(Action.FailAddIssue(issueId));
+             },
+           )}
+          ->ignore;
         }}>
         {React.string("Add Issue")}
       </button>
