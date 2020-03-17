@@ -1,6 +1,6 @@
 # Issue management app
 
-This issue management app showcases Sihl. It uses `@sihl/users` for user management.
+This issue management app showcases the web framework [Sihl](https://github.com/oxidizing/sihl/). It uses [@sihl/users](https://www.npmjs.com/package/@sihl/users) for user management.
 
 You can check out the live demo here: [https://sihl-example-issues.oxidizing.io/](https://sihl-example-issues.oxidizing.io/)
 
