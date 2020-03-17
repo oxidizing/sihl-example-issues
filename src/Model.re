@@ -46,4 +46,6 @@ module Board = {
     owner,
     status: "active",
   };
+
+  let makeId = (~id, ~title, ~owner) => {id, title, owner, status: "active"};
 };

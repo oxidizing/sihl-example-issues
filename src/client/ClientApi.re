@@ -107,7 +107,7 @@ module Board = {
           (),
         ),
       )
-      |> toResult;
+      |> decodeResult(~decode=Model.Board.t_decode);
     };
   };
 
@@ -175,7 +175,7 @@ module Issue = {
           (),
         ),
       )
-      |> toResult;
+      |> decodeResult(~decode=Model.Issue.t_decode);
     };
   };
 };

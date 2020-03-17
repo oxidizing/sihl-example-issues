@@ -3,15 +3,186 @@ module Async = Sihl.Core.Async;
 module Layout = ClientLayout;
 module Login = ClientLoginPage;
 
-type action =
-  | StartAddIssue(string, string, option(string))
-  | SucceedAddIssue(string, string, string, option(string))
-  | FailAddIssue(string)
-  | StartCompleteIssue(string)
-  | FailCompleteIssue(string, string)
-  | Set(list(Model.Issue.t));
+module State = {
+  type t = {
+    boards: list(Model.Board.t),
+    selectedBoard: option(string),
+    issues: list(Model.Issue.t),
+  };
 
-module SelectBoard = {
+  let default = {boards: [], selectedBoard: None, issues: []};
+
+  let setIssues = (state, ~issues) => {
+    {...state, issues};
+  };
+
+  let setBoards = (state, ~boards) => {
+    {...state, boards};
+  };
+
+  let appendIssue = (state, ~issueId, ~boardId, ~title, ~description) => {
+    let issue =
+      Model.Issue.makeId(~id=issueId, ~board=boardId, ~title, ~description);
+    let issues = Belt.List.concat(state.issues, [issue]);
+    {...state, issues};
+  };
+
+  let updateIssue = (state, ~oldIssueId, ~issue: Model.Issue.t) => {
+    let issues =
+      state.issues
+      ->Belt.List.keep(currentIssue => currentIssue.id !== oldIssueId)
+      ->Belt.List.concat([issue]);
+    {...state, issues};
+  };
+
+  let removeIssue = (state, ~issueId) => {
+    {
+      ...state,
+      issues: Belt.List.keep(state.issues, issue => issue.id !== issueId),
+    };
+  };
+
+  let setIssueStatus = (state, ~issueId, ~status) => {
+    {
+      ...state,
+      issues:
+        Belt.List.map(state.issues, issue =>
+          issue.id === issueId ? Model.Issue.setStatus(issue, status) : issue
+        ),
+    };
+  };
+
+  let completeIssue = (state, ~issueId) => {
+    {
+      ...state,
+      issues:
+        Belt.List.map(state.issues, issue =>
+          issue.id === issueId ? Model.Issue.complete(issue) : issue
+        ),
+    };
+  };
+
+  let addBoard = (state, ~boardId, ~title) => {
+    {
+      ...state,
+      boards:
+        Belt.List.concat(
+          state.boards,
+          [Model.Board.makeId(~id=boardId, ~title, ~owner="")],
+        ),
+    };
+  };
+
+  let updateBoard = (state, ~oldBoardId, ~board: Model.Board.t) => {
+    let boards =
+      state.boards
+      ->Belt.List.keep(currentBoard => currentBoard.id !== oldBoardId)
+      ->Belt.List.concat([board]);
+    {...state, boards};
+  };
+
+  let removeBoard = (state, ~boardId) => {
+    {
+      ...state,
+      boards: Belt.List.keep(state.boards, board => board.id !== boardId),
+    };
+  };
+
+  let selectBoard = (state, ~boardId) => {
+    {...state, selectedBoard: Some(boardId)};
+  };
+
+  let unselectBoard = state => {
+    {...state, selectedBoard: None};
+  };
+};
+
+module Action = {
+  type t =
+    | StartAddIssue(string, string, string, option(string))
+    | SucceedAddIssue(string, Model.Issue.t)
+    | FailAddIssue(string)
+    | StartCompleteIssue(string)
+    | FailCompleteIssue(string, string)
+    | SetIssues(list(Model.Issue.t))
+    | StartAddBoard(string, string)
+    | SucceedAddBoard(string, Model.Board.t)
+    | FailAddBoard(string)
+    | SetBoards(list(Model.Board.t))
+    | SelectBoard(string)
+    | UnselectBoard;
+
+  let reducer = (state, action) =>
+    switch (state, action) {
+    | (state, StartAddIssue(issueId, boardId, title, description)) =>
+      State.appendIssue(state, ~issueId, ~title, ~description, ~boardId)
+    | (state, SucceedAddIssue(oldIssueId, issue)) =>
+      State.updateIssue(state, ~oldIssueId, ~issue)
+    | (state, FailAddIssue(issueId)) => State.removeIssue(state, ~issueId)
+    | (state, StartCompleteIssue(issueId)) =>
+      State.completeIssue(state, ~issueId)
+    | (state, FailCompleteIssue(issueId, status)) =>
+      State.setIssueStatus(state, ~issueId, ~status)
+    | (state, StartAddBoard(boardId, title)) =>
+      State.addBoard(state, ~boardId, ~title)
+    | (state, SucceedAddBoard(oldBoardId, board)) =>
+      State.updateBoard(state, ~oldBoardId, ~board)
+    | (state, FailAddBoard(boardId)) => State.removeBoard(state, ~boardId)
+    | (state, SelectBoard(boardId)) => State.selectBoard(state, ~boardId)
+    | (state, UnselectBoard) => State.unselectBoard(state)
+    | (state, SetIssues(issues)) => State.setIssues(state, ~issues)
+    | (state, SetBoards(boards)) => State.setBoards(state, ~boards)
+    };
+};
+
+module AddBoard = {
+  [@react.component]
+  let make = (~dispatch) => {
+    let (title, setTitle) = React.useState(_ => "");
+    let (_, setError) =
+      React.useContext(ClientContextProvider.Error.context);
+
+    <div className="field has-addons">
+      <div className="control">
+        <input
+          onChange={event => {
+            let value = ReactEvent.Form.target(event)##value;
+            setTitle(_ => value);
+          }}
+          value=title
+          className="input"
+          type_="text"
+          placeholder="Board title"
+        />
+      </div>
+      <div className="control">
+        <a
+          className="button is-info"
+          onClick={event => {
+            ReactEvent.Mouse.preventDefault(event);
+            {let boardId = Sihl.Core.Uuid.V4.uuidv4();
+             dispatch(Action.StartAddBoard(boardId, title));
+             dispatch(Action.SelectBoard(boardId));
+             let%Async result = ClientApi.Board.Add.f(~title);
+             Async.async(
+               switch (result) {
+               | Ok(board) =>
+                 dispatch(Action.SucceedAddBoard(boardId, board))
+               | Error(msg) =>
+                 setError(_ => Some("Failed create board: " ++ msg));
+                 dispatch(Action.FailAddBoard(boardId));
+                 dispatch(Action.UnselectBoard);
+               },
+             )}
+            ->ignore;
+          }}>
+          {React.string("Add board")}
+        </a>
+      </div>
+    </div>;
+  };
+};
+module Boards = {
   let selectedBoard = () => {
     let url = ReasonReactRouter.useUrl();
     switch (url.path) {
@@ -21,55 +192,9 @@ module SelectBoard = {
   };
 
   [@react.component]
-  let make = () => {
-    let (_, setError) =
-      React.useContext(ClientContextProvider.Error.context);
-    let (boards, setBoards) = React.useState(_ => None);
-    let (title, setTitle) = React.useState(_ => "");
-
-    React.useEffect1(
-      () => {
-        {
-          let%Async boards = ClientApi.Board.GetAll.f();
-          Async.async(
-            switch (boards) {
-            | Belt.Result.Ok(boards) => setBoards(_ => Some(boards))
-            | Belt.Result.Error(msg) => setError(_ => Some(msg))
-            },
-          );
-        }
-        ->ignore;
-        None;
-      },
-      [||],
-    );
-
+  let make = (~dispatch, ~boards) => {
     <div>
-      <div className="field has-addons">
-        <div className="control">
-          <input
-            onChange={event => {
-              let value = ReactEvent.Form.target(event)##value;
-              setTitle(_ => value);
-            }}
-            value=title
-            className="input"
-            type_="text"
-            placeholder="Board title"
-          />
-        </div>
-        <div className="control">
-          <a
-            className="button is-info"
-            onClick={event => {
-              ReactEvent.Mouse.preventDefault(event);
-              ClientApi.Board.Add.f(~title)->ignore;
-              ();
-            }}>
-            {React.string("Add board")}
-          </a>
-        </div>
-      </div>
+      <AddBoard dispatch />
       <div className="field">
         <p className="control">
           <span className="select">
@@ -77,13 +202,17 @@ module SelectBoard = {
               value={selectedBoard()->Belt.Option.getWithDefault("select")}
               onChange={event => {
                 let value = ReactEvent.Form.target(event)##value;
-                let value = value === "select" ? "" : value;
-                ReasonReactRouter.push("/app/boards/" ++ value);
+                if (value === "select") {
+                  dispatch(UnselectBoard);
+                  ReasonReactRouter.push("/app/boards/");
+                } else {
+                  dispatch(SelectBoard(value));
+                  ReasonReactRouter.push("/app/boards/" ++ value);
+                };
               }}>
               <option value="select"> {React.string("Select board")} </option>
               {boards
-               ->Belt.Option.getWithDefault([])
-               ->Belt.List.map(board =>
+               ->Belt.List.map((board: Model.Board.t) =>
                    <option key={board.id} value={board.id}>
                      {React.string(board.title)}
                    </option>
@@ -101,13 +230,13 @@ module SelectBoard = {
 module Issue = {
   let complete = (setError, dispatch, ~issueId, ~currentStatus) => {
     {
-      dispatch(StartCompleteIssue(issueId));
+      dispatch(Action.StartCompleteIssue(issueId));
       let%Async result = ClientApi.Issue.Complete.f(~issueId);
       Async.async(
         switch (result) {
         | Belt.Result.Ok () => ()
         | Belt.Result.Error(msg) =>
-          dispatch(FailCompleteIssue(issueId, currentStatus));
+          dispatch(Action.FailCompleteIssue(issueId, currentStatus));
           setError(_ => Some("Failed create issue: " ++ msg));
         },
       );
@@ -177,7 +306,7 @@ module Board = {
           let%Async result = ClientApi.Board.Issues.f(~boardId);
           Async.async(
             switch (result) {
-            | Belt.Result.Ok(issues) => dispatch(Set(issues))
+            | Belt.Result.Ok(issues) => dispatch(Action.SetIssues(issues))
             | Belt.Result.Error(msg) => setError(_ => Some(msg))
             },
           );
@@ -197,17 +326,15 @@ module Board = {
 
 module AddIssue = {
   let addIssue = (setError, dispatch, ~boardId, ~title, ~description) => {
-    dispatch(StartAddIssue(boardId, title, description));
+    let issueId = Sihl.Core.Uuid.V4.uuidv4();
+    dispatch(Action.StartAddIssue(issueId, boardId, title, description));
     let%Async result = ClientApi.Issue.Add.f(~boardId, ~title, ~description);
     Async.async(
       switch (result) {
-      | Belt.Result.Ok(_) =>
-        // TODO
-        // dispatch(Succeed(boardId, title, description));
-        ()
+      | Belt.Result.Ok(issue) => dispatch(SucceedAddIssue(issueId, issue))
       | Belt.Result.Error(msg) =>
         setError(_ => Some("Failed create issue: " ++ msg));
-        dispatch(FailAddIssue(boardId));
+        dispatch(Action.FailAddIssue(issueId));
       },
     );
   };
@@ -261,60 +388,34 @@ module AddIssue = {
   };
 };
 
-open Model.Issue;
-
-let reducer = (state, action) =>
-  switch (state, action) {
-  | (Some(issues), StartAddIssue(boardId, title, description)) =>
-    Some(
-      Belt.List.concat(
-        issues,
-        [make(~title, ~description, ~board=boardId)],
-      ),
-    )
-  | (None, StartAddIssue(boardId, title, description)) =>
-    Some([Model.Issue.make(~title, ~description, ~board=boardId)])
-  | (Some(issues), SucceedAddIssue(issueId, boardId, title, description)) =>
-    let issues = Belt.List.keep(issues, issue => issue.id !== issueId);
-    Some(
-      Belt.List.concat(
-        issues,
-        [makeId(~id=issueId, ~title, ~description, ~board=boardId)],
-      ),
-    );
-  | (None, SucceedAddIssue(issueId, boardId, title, description)) =>
-    Some([makeId(~id=issueId, ~board=boardId, ~title, ~description)])
-  | (None, FailAddIssue(_)) => None
-  | (Some(issues), FailAddIssue(issueId)) =>
-    Some(Belt.List.keep(issues, issue => issue.id !== issueId))
-  | (Some(issues), StartCompleteIssue(issueId)) =>
-    Some(
-      Belt.List.map(issues, issue =>
-        issue.id === issueId ? complete(issue) : issue
-      ),
-    )
-  | (Some(issues), FailCompleteIssue(issueId, status)) =>
-    Some(
-      Belt.List.map(issues, issue =>
-        issue.id === issueId ? setStatus(issue, status) : issue
-      ),
-    )
-  | (_, Set(issues)) => Some(issues)
-  | (None, StartCompleteIssue(issueId) | FailCompleteIssue(issueId, _)) =>
-    Js.log(
-      "How on earth were you able to call that action without issues? issueId="
-      ++ issueId,
-    );
-    None;
-  };
-
 [@react.component]
 let make = () => {
-  let (state, dispatch) = React.useReducer(reducer, None);
+  let (state, dispatch) = React.useReducer(Action.reducer, State.default);
+  let (_, setError) = React.useContext(ClientContextProvider.Error.context);
   let url = ReasonReactRouter.useUrl();
+
+  React.useEffect1(
+    () => {
+      {
+        let%Async boards = ClientApi.Board.GetAll.f();
+        Async.async(
+          switch (boards) {
+          | Ok(boards) => dispatch(SetBoards(boards))
+          | Error(msg) => setError(_ => Some(msg))
+          },
+        );
+      }
+      ->ignore;
+      None;
+    },
+    [||],
+  );
+
   <Layout>
     <div className="columns">
-      <div className="column is-one-third"> <SelectBoard /> </div>
+      <div className="column is-one-third">
+        <Boards dispatch boards={state.boards} />
+      </div>
       <div className="column is-one-third">
         <h2 className="title is-2"> {React.string("Issues")} </h2>
         {switch (url.path) {
@@ -323,7 +424,7 @@ let make = () => {
          | ["app", "boards", boardId] =>
            <div>
              <AddIssue dispatch boardId />
-             <Board issues=state dispatch boardId />
+             <Board issues={Some(state.issues)} dispatch boardId />
            </div>
          | _ => <Login />
          }}

@@ -55,7 +55,7 @@ module AddBoard = {
   [@decco]
   type body_in = {title: string};
   [@decco]
-  type body_out = {message: string};
+  type body_out = Model.Board.t;
 
   let endpoint = (root, database) =>
     Sihl.Core.Http.dbEndpoint({
@@ -67,8 +67,8 @@ module AddBoard = {
         let%Async token = Sihl.Core.Http.requireAuthorizationToken(req);
         let%Async user = Sihl.Users.User.authenticate(conn, token);
         let%Async {title} = req.requireBody(body_in_decode);
-        let%Async _ = Service.Board.create((conn, user), ~title);
-        Async.async @@ OkJson(body_out_encode({message: "ok"}));
+        let%Async board = Service.Board.create((conn, user), ~title);
+        Async.async @@ OkJson(body_out_encode(board));
       },
     });
 };
@@ -81,7 +81,7 @@ module AddIssue = {
     board: string,
   };
   [@decco]
-  type body_out = {message: string};
+  type body_out = Model.Issue.t;
 
   let endpoint = (root, database) =>
     Sihl.Core.Http.dbEndpoint({
@@ -94,9 +94,9 @@ module AddIssue = {
         let%Async user = Sihl.Users.User.authenticate(conn, token);
         let%Async {title, description, board} =
           req.requireBody(body_in_decode);
-        let%Async _ =
+        let%Async issue =
           Service.Issue.create((conn, user), ~title, ~description, ~board);
-        Async.async @@ OkJson(body_out_encode({message: "ok"}));
+        Async.async @@ OkJson(body_out_encode(issue));
       },
     });
 };
