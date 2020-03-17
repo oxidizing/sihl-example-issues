@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/oxidizing/sihl-example-issues.svg?style=svg&circle-token=1351b6152d0a4c49555dada65d80fa977159028c)](https://circleci.com/gh/oxidizing/sihl-example-issues)
+
 # Issue management app
 
 This issue management app showcases the web framework [Sihl](https://github.com/oxidizing/sihl/). It uses [@sihl/users](https://www.npmjs.com/package/@sihl/users) for user management.
