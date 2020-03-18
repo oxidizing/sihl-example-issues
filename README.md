@@ -2,7 +2,7 @@
 
 # Issue Management App
 
-This is a simple full-stack app in Reason that uses the web framework [Sihl](https://github.com/oxidizing/sihl/) with [ReasonReact](https://reasonml.github.io/reason-react/).
+This is a simple app in full-stack Reason that uses the web framework [Sihl](https://github.com/oxidizing/sihl/) with [ReasonReact](https://reasonml.github.io/reason-react/).
 
 You can check out the live demo here: [https://sihl-example-issues.oxidizing.io/](https://sihl-example-issues.oxidizing.io/)
 
@@ -10,24 +10,23 @@ You can check out the live demo here: [https://sihl-example-issues.oxidizing.io/
 
 ## Features
 
-- login & register (thanks to [@sihl/users](https://www.npmjs.com/package/@sihl/users))
-- creation of boards
-- creation of issues on a board
-- mark issues as *completed*
+- Login & Register (thanks to [@sihl/users](https://www.npmjs.com/package/@sihl/users))
+- Creation of boards
+- Creation of issues on a board
+- Mark issues as **completed**
 
 ## Description
 
 - Admin UI for users, boards and issues
-- Uses backend models in the react client
+- Uses backend models in the react frontend to share logic
 - Optimistic rendering with error handling
-- Client logic testable thanks to redux
-- Integration tests with jest
+- Unit tests with jest thanks to testable business logic with reducers
 
-It uses [@sihl/users](https://www.npmjs.com/package/@sihl/users) for user management.
+This project uses the [@sihl/users](https://www.npmjs.com/package/@sihl/users) app for user management.
 
 ## Getting started
 
-Start a local MariaDB instance. You can use `docker-compose -f docker-compose.test.yml up -d` to quickly spin up the correct an instance with the right MariaDB version.
+Start a local MariaDB instance. You can use `docker-compose -f docker-compose.test.yml up -d` to quickly spin up a MariaDB instance with the correct version.
 
 Run `yarn test` to run all tests.
 
@@ -42,3 +41,9 @@ Check out the [tutorial](https://github.com/oxidizing/sihl/wiki/Tutorial:-Issue-
 ![Screenshot](/images/screen1.png)
 ![Screenshot](/images/screen2.png)
 ![Screenshot](/images/screen4.png)
+
+## License
+
+Copyright (c) 2020 [Oxidizing Systems GmbH](https://oxidizing.io/)
+
+Distributed under the MIT License.
