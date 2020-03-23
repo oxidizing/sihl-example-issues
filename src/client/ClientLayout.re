@@ -66,7 +66,6 @@ module ForwardIfLoggedIn = {
       },
       [|ClientSession.has()|],
     );
-
     children;
   };
 };
