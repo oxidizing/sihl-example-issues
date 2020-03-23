@@ -44,6 +44,6 @@ Check out the [tutorial](https://github.com/oxidizing/sihl/wiki/Tutorial:-Issue-
 
 ## License
 
-Copyright (c) 2020 [Oxidizing Systems GmbH](https://oxidizing.io/)
+Copyright (c) 2020 [Oxidizing Systems](https://oxidizing.io/)
 
 Distributed under the MIT License.
