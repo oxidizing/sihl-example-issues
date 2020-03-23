@@ -50,19 +50,21 @@ module ForwardIfLoggedIn = {
   let make = (~children, ~url) => {
     React.useEffect1(
       _ => {
-        {
-          let%Async result = ClientApi.User.Me.f();
-          Async.async(
-            switch (result) {
-            | Ok(_) => ReasonReactRouter.push(url)
-            | Error(_) => ClientSession.end_()
-            },
-          );
-        }
-        ->ignore;
+        if (ClientSession.has()) {
+          {
+            let%Async result = ClientApi.User.Me.f();
+            Async.async(
+              switch (result) {
+              | Ok(_) => ReasonReactRouter.push(url)
+              | Error(_) => ClientSession.end_()
+              },
+            );
+          }
+          ->ignore;
+        };
         None;
       },
-      [|ClientSession.get().token|],
+      [|ClientSession.has()|],
     );
 
     children;
@@ -76,21 +78,23 @@ let make = (~children) => {
 
   React.useEffect1(
     _ => {
-      {
-        let%Async result = ClientApi.User.Me.f();
-        Async.async(
-          switch (result) {
-          | Ok(_) => setHasValidSession(_ => true)
-          | Error(_) =>
-            ClientSession.end_();
-            setHasValidSession(_ => false);
-          },
-        );
-      }
-      ->ignore;
+      if (ClientSession.has()) {
+        {
+          let%Async result = ClientApi.User.Me.f();
+          Async.async(
+            switch (result) {
+            | Ok(_) => setHasValidSession(_ => true)
+            | Error(_) =>
+              ClientSession.end_();
+              setHasValidSession(_ => false);
+            },
+          );
+        }
+        ->ignore;
+      };
       None;
     },
-    [|ClientSession.get().token|],
+    [|ClientSession.has()|],
   );
 
   <div>

@@ -85,7 +85,7 @@ module Board = {
     type t = list(Model.Board.t);
 
     let f = () => {
-      let ClientSession.{userId} = ClientSession.get();
+      let ClientSession.{userId} = ClientSession.getOrThrow();
 
       Fetch.fetchWithInit(
         ClientConfig.baseUrl() ++ "/issues/users/" ++ userId ++ "/boards/",
@@ -93,7 +93,7 @@ module Board = {
           ~method_=Get,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": "Bearer " ++ ClientSession.get().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -113,7 +113,7 @@ module Board = {
           ~body=Fetch.BodyInit.make(body),
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": "Bearer " ++ ClientSession.get().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -133,7 +133,7 @@ module Board = {
           ~method_=Get,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": "Bearer " ++ ClientSession.get().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -152,7 +152,7 @@ module Issue = {
           ~method_=Post,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.get().token,
+              "authorization": ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -181,7 +181,7 @@ module Issue = {
           ~body=Fetch.BodyInit.make(body),
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.get().token,
+              "authorization": ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -200,7 +200,7 @@ module User = {
           ~method_=Get,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.get().token,
+              "authorization": ClientSession.getOrThrow().token,
             }),
           (),
         ),

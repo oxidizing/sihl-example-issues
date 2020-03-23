@@ -11,14 +11,16 @@ let store = (~token, ~userId) => {
   setItem("/users/userId", userId, localStorage);
 };
 
-let get = () => {
+let getOrThrow = () => {
   Dom.Storage.(
     switch (
       getItem("/users/token", localStorage),
       getItem("/users/userId", localStorage),
     ) {
     | (Some(token), Some(userId)) => {token, userId}
-    | _ => {token: "no session found", userId: "no session found"}
+    | _ =>
+      Js.log("ClientSession.getOrThrow() was called without session stored");
+      raise(SessionFetchException);
     }
   );
 };
