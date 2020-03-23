@@ -60,6 +60,10 @@ let make = () => {
                 setPassword(_ => password);
               }}
               value={password->Belt.Option.getWithDefault("")}
+              onKeyDown={event =>
+                ReactEvent.Keyboard.which(event) === 13
+                  ? login(~email, ~password)->ignore : ()
+              }
               className="input"
               name="password"
               type_="password"
