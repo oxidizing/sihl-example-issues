@@ -1,4 +1,4 @@
-include Sihl.Core.Test;
+include Sihl.App.Test;
 Integration.setupHarness([Sihl.Users.App.app([]), App.app()]);
 open Jest;
 
@@ -7,7 +7,7 @@ let baseUrl = "http://localhost:3000";
 Expect.(
   testPromise("User creates board", () => {
     let%Async (user, {token}) =
-      Sihl.Core.Main.Manager.seed(
+      Sihl.App.Main.Manager.seed(
         Sihl.Users.Seeds.loggedInUser("foobar@example.com", "123"),
       );
     let body = {|{"title": "Board title"}|};
@@ -48,11 +48,11 @@ Expect.(
 Expect.(
   testPromise("User creates issue for board", () => {
     let%Async (user, {token}) =
-      Sihl.Core.Main.Manager.seed(
+      Sihl.App.Main.Manager.seed(
         Sihl.Users.Seeds.loggedInUser("foobar@example.com", "123"),
       );
     let%Async board =
-      Sihl.Core.Main.Manager.seed(Seeds.board(~user, ~title="Board title"));
+      Sihl.App.Main.Manager.seed(Seeds.board(~user, ~title="Board title"));
 
     let boardId = board.id;
     let body = {j|
@@ -99,15 +99,15 @@ Expect.(
 Expect.(
   testPromise("User fetches issues of board", () => {
     let%Async (user, {token}) =
-      Sihl.Core.Main.Manager.seed(
+      Sihl.App.Main.Manager.seed(
         Sihl.Users.Seeds.loggedInUser("foobar@example.com", "123"),
       );
     let%Async board1 =
-      Sihl.Core.Main.Manager.seed(Seeds.board(~user, ~title="board 1"));
+      Sihl.App.Main.Manager.seed(Seeds.board(~user, ~title="board 1"));
     let%Async board2 =
-      Sihl.Core.Main.Manager.seed(Seeds.board(~user, ~title="board 2"));
+      Sihl.App.Main.Manager.seed(Seeds.board(~user, ~title="board 2"));
     let%Async _ =
-      Sihl.Core.Main.Manager.seed(
+      Sihl.App.Main.Manager.seed(
         Seeds.issue(
           ~board=board1.id,
           ~user,
@@ -139,13 +139,13 @@ Expect.(
 Expect.(
   testPromise("User commpletes issue", () => {
     let%Async (user, {token}) =
-      Sihl.Core.Main.Manager.seed(
+      Sihl.App.Main.Manager.seed(
         Sihl.Users.Seeds.loggedInUser("foobar@example.com", "123"),
       );
     let%Async board =
-      Sihl.Core.Main.Manager.seed(Seeds.board(~user, ~title="Board title"));
+      Sihl.App.Main.Manager.seed(Seeds.board(~user, ~title="Board title"));
     let%Async issue =
-      Sihl.Core.Main.Manager.seed(
+      Sihl.App.Main.Manager.seed(
         Seeds.issue(
           ~board=board.id,
           ~user,

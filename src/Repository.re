@@ -1,15 +1,6 @@
 module Async = Sihl.Core.Async;
 
 module Issue = {
-  module Clean = {
-    let stmt = "
-TRUNCATE TABLE issues_issues;
-";
-    let run: Sihl.Core.Db.Connection.t => Js.Promise.t(unit) = {
-      connection => Sihl.Core.Db.Repo.execute(connection, stmt);
-    };
-  };
-
   module GetAll = {
     let stmt = "
 SELECT
@@ -26,16 +17,13 @@ LEFT JOIN issues_boards
 ON issues_boards.id = issues_issues.board;
 ";
 
-    let query:
-      Sihl.Core.Db.Connection.t =>
-      Js.Promise.t(Sihl.Core.Db.Repo.Result.t(Model.Issue.t)) =
-      connection =>
-        Sihl.Core.Db.Repo.getMany(
-          ~connection,
-          ~stmt,
-          ~decode=Model.Issue.t_decode,
-          (),
-        );
+    let query = connection =>
+      Sihl.App.Db.Repo.getMany(
+        ~connection,
+        ~stmt,
+        ~decode=Model.Issue.t_decode,
+        (),
+      );
   };
 
   module GetAllByBoard = {
@@ -58,17 +46,14 @@ WHERE issues_boards.uuid = UNHEX(REPLACE(?, '-', ''));
     [@decco]
     type params = string;
 
-    let query:
-      (Sihl.Core.Db.Connection.t, ~boardId: string) =>
-      Js.Promise.t(Sihl.Core.Db.Repo.Result.t(Model.Issue.t)) =
-      (connection, ~boardId) =>
-        Sihl.Core.Db.Repo.getMany(
-          ~connection,
-          ~stmt,
-          ~decode=Model.Issue.t_decode,
-          ~parameters=params_encode(boardId),
-          (),
-        );
+    let query = (connection, ~boardId) =>
+      Sihl.App.Db.Repo.getMany(
+        ~connection,
+        ~stmt,
+        ~decode=Model.Issue.t_decode,
+        ~parameters=params_encode(boardId),
+        (),
+      );
   };
 
   module GetAllByUser = {
@@ -91,17 +76,14 @@ WHERE users_users.uuid = UNHEX(REPLACE(?, '-', ''));
     [@decco]
     type params = string;
 
-    let query:
-      (Sihl.Core.Db.Connection.t, ~userId: string) =>
-      Js.Promise.t(Sihl.Core.Db.Repo.Result.t(Model.Issue.t)) =
-      (connection, ~userId) =>
-        Sihl.Core.Db.Repo.getMany(
-          ~connection,
-          ~stmt,
-          ~decode=Model.Issue.t_decode,
-          ~parameters=params_encode(userId),
-          (),
-        );
+    let query = (connection, ~userId) =>
+      Sihl.App.Db.Repo.getMany(
+        ~connection,
+        ~stmt,
+        ~decode=Model.Issue.t_decode,
+        ~parameters=params_encode(userId),
+        (),
+      );
   };
 
   module Get = {
@@ -124,18 +106,14 @@ WHERE issues_issues.uuid = UNHEX(REPLACE(?, '-', ''));
     [@decco]
     type parameters = string;
 
-    let query:
-      (Sihl.Core.Db.Connection.t, ~issueId: string) =>
-      Js.Promise.t(Belt.Result.t(Model.Issue.t, string)) = {
-      (connection, ~issueId) =>
-        Sihl.Core.Db.Repo.getOne(
-          ~connection,
-          ~stmt,
-          ~parameters=parameters_encode(issueId),
-          ~decode=Model.Issue.t_decode,
-          (),
-        );
-    };
+    let query = (connection, ~issueId) =>
+      Sihl.App.Db.Repo.getOne(
+        ~connection,
+        ~stmt,
+        ~parameters=parameters_encode(issueId),
+        ~decode=Model.Issue.t_decode,
+        (),
+      );
   };
 
   module Upsert = {
@@ -173,7 +151,7 @@ status = VALUES(status)
     );
 
     let query = (connection, ~issue: Model.Issue.t) =>
-      Sihl.Core.Db.Repo.execute(
+      Sihl.App.Db.Repo.execute(
         ~parameters=
           parameters_encode((
             issue.id,
@@ -190,15 +168,6 @@ status = VALUES(status)
 };
 
 module Board = {
-  module Clean = {
-    let stmt = "
-TRUNCATE TABLE issues_boards;
-";
-    let run: Sihl.Core.Db.Connection.t => Js.Promise.t(unit) = {
-      connection => Sihl.Core.Db.Repo.execute(connection, stmt);
-    };
-  };
-
   module Get = {
     let stmt = "
 SELECT
@@ -215,17 +184,14 @@ WHERE issues_boards.uuid = UNHEX(REPLACE(?, '-', ''));
     [@decco]
     type params = string;
 
-    let query:
-      (Sihl.Core.Db.Connection.t, ~boardId: string) =>
-      Js.Promise.t(Belt.Result.t(Model.Board.t, string)) =
-      (connection, ~boardId) =>
-        Sihl.Core.Db.Repo.getOne(
-          ~connection,
-          ~stmt,
-          ~parameters=params_encode(boardId),
-          ~decode=Model.Board.t_decode,
-          (),
-        );
+    let query = (connection, ~boardId) =>
+      Sihl.App.Db.Repo.getOne(
+        ~connection,
+        ~stmt,
+        ~parameters=params_encode(boardId),
+        ~decode=Model.Board.t_decode,
+        (),
+      );
   };
 
   module GetAllByUser = {
@@ -244,17 +210,14 @@ WHERE users_users.uuid = UNHEX(REPLACE(?, '-', ''));
     [@decco]
     type params = string;
 
-    let query:
-      (Sihl.Core.Db.Connection.t, ~userId: string) =>
-      Js.Promise.t(Sihl.Core.Db.Repo.Result.t(Model.Board.t)) =
-      (connection, ~userId) =>
-        Sihl.Core.Db.Repo.getMany(
-          ~connection,
-          ~stmt,
-          ~decode=Model.Board.t_decode,
-          ~parameters=params_encode(userId),
-          (),
-        );
+    let query = (connection, ~userId) =>
+      Sihl.App.Db.Repo.getMany(
+        ~connection,
+        ~stmt,
+        ~decode=Model.Board.t_decode,
+        ~parameters=params_encode(userId),
+        (),
+      );
   };
 
   module GetAll = {
@@ -269,16 +232,13 @@ LEFT JOIN users_users
 ON users_users.id  = issues_boards.owner;
 ";
 
-    let query:
-      Sihl.Core.Db.Connection.t =>
-      Js.Promise.t(Sihl.Core.Db.Repo.Result.t(Model.Board.t)) =
-      connection =>
-        Sihl.Core.Db.Repo.getMany(
-          ~connection,
-          ~stmt,
-          ~decode=Model.Board.t_decode,
-          (),
-        );
+    let query = connection =>
+      Sihl.App.Db.Repo.getMany(
+        ~connection,
+        ~stmt,
+        ~decode=Model.Board.t_decode,
+        (),
+      );
   };
 
   module Upsert = {
@@ -304,7 +264,7 @@ status = VALUES(status)
     type parameters = (string, string, string, string);
 
     let query = (connection, ~board: Model.Board.t) =>
-      Sihl.Core.Db.Repo.execute(
+      Sihl.App.Db.Repo.execute(
         ~parameters=
           parameters_encode((
             board.id,

@@ -25,6 +25,7 @@
     "bs-fetch",
     "@sihl/core",
     "@sihl/users",
+    "@sihl/mysql",
     "decco"
   ],
   "bs-dev-dependencies": ["@glennsl/bs-jest"],

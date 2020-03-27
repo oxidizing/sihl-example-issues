@@ -8,19 +8,19 @@ module GetBoardsByUser = {
   type params = {userId: string};
 
   let endpoint = (root, database) =>
-    Sihl.Core.Http.dbEndpoint({
+    Sihl.App.Http.dbEndpoint({
       database,
       verb: GET,
       path: {j|/$root/users/:userId/boards/|j},
       handler: (conn, req) => {
-        open! Sihl.Core.Http.Endpoint;
-        let%Async token = Sihl.Core.Http.requireAuthorizationToken(req);
+        open! Sihl.App.Http.Endpoint;
+        let%Async token = Sihl.App.Http.requireAuthorizationToken(req);
         let%Async user = Sihl.Users.User.authenticate(conn, token);
         let%Async {userId} = req.requireParams(params_decode);
         let%Async boards = Service.Board.getAllByUser((conn, user), ~userId);
         let response =
-          boards |> Sihl.Core.Db.Repo.Result.rows |> body_out_encode;
-        Async.async @@ Sihl.Core.Http.Endpoint.OkJson(response);
+          boards |> Sihl.Core.Db.Result.Query.rows |> body_out_encode;
+        Async.async @@ Sihl.App.Http.Endpoint.OkJson(response);
       },
     });
 };
@@ -33,20 +33,20 @@ module GetIssuesByBoard = {
   type params = {boardId: string};
 
   let endpoint = (root, database) =>
-    Sihl.Core.Http.dbEndpoint({
+    Sihl.App.Http.dbEndpoint({
       database,
       verb: GET,
       path: {j|/$root/boards/:boardId/issues/|j},
       handler: (conn, req) => {
-        open! Sihl.Core.Http.Endpoint;
-        let%Async token = Sihl.Core.Http.requireAuthorizationToken(req);
+        open! Sihl.App.Http.Endpoint;
+        let%Async token = Sihl.App.Http.requireAuthorizationToken(req);
         let%Async user = Sihl.Users.User.authenticate(conn, token);
         let%Async {boardId} = req.requireParams(params_decode);
         let%Async issues =
           Service.Issue.getAllByBoard((conn, user), ~boardId);
         let response =
-          issues |> Sihl.Core.Db.Repo.Result.rows |> body_out_encode;
-        Async.async @@ Sihl.Core.Http.Endpoint.OkJson(response);
+          issues |> Sihl.Core.Db.Result.Query.rows |> body_out_encode;
+        Async.async @@ Sihl.App.Http.Endpoint.OkJson(response);
       },
     });
 };
@@ -58,13 +58,13 @@ module AddBoard = {
   type body_out = Model.Board.t;
 
   let endpoint = (root, database) =>
-    Sihl.Core.Http.dbEndpoint({
+    Sihl.App.Http.dbEndpoint({
       database,
       verb: POST,
       path: {j|/$root/boards/|j},
       handler: (conn, req) => {
-        open! Sihl.Core.Http.Endpoint;
-        let%Async token = Sihl.Core.Http.requireAuthorizationToken(req);
+        open! Sihl.App.Http.Endpoint;
+        let%Async token = Sihl.App.Http.requireAuthorizationToken(req);
         let%Async user = Sihl.Users.User.authenticate(conn, token);
         let%Async {title} = req.requireBody(body_in_decode);
         let%Async board = Service.Board.create((conn, user), ~title);
@@ -84,13 +84,13 @@ module AddIssue = {
   type body_out = Model.Issue.t;
 
   let endpoint = (root, database) =>
-    Sihl.Core.Http.dbEndpoint({
+    Sihl.App.Http.dbEndpoint({
       database,
       verb: POST,
       path: {j|/$root/issues/|j},
       handler: (conn, req) => {
-        open! Sihl.Core.Http.Endpoint;
-        let%Async token = Sihl.Core.Http.requireAuthorizationToken(req);
+        open! Sihl.App.Http.Endpoint;
+        let%Async token = Sihl.App.Http.requireAuthorizationToken(req);
         let%Async user = Sihl.Users.User.authenticate(conn, token);
         let%Async {title, description, board} =
           req.requireBody(body_in_decode);
@@ -108,13 +108,13 @@ module CompleteIssue = {
   type body_out = {message: string};
 
   let endpoint = (root, database) =>
-    Sihl.Core.Http.dbEndpoint({
+    Sihl.App.Http.dbEndpoint({
       database,
       verb: POST,
       path: {j|/$root/issues/:issueId/complete/|j},
       handler: (conn, req) => {
-        open! Sihl.Core.Http.Endpoint;
-        let%Async token = Sihl.Core.Http.requireAuthorizationToken(req);
+        open! Sihl.App.Http.Endpoint;
+        let%Async token = Sihl.App.Http.requireAuthorizationToken(req);
         let%Async user = Sihl.Users.User.authenticate(conn, token);
         let%Async {issueId} = req.requireParams(params_decode);
         let%Async _ = Service.Issue.complete((conn, user), ~issueId);
@@ -129,25 +129,25 @@ module Client = {
     type params = {asset: string};
 
     let endpoint = () =>
-      Sihl.Core.Http.endpoint({
+      Sihl.App.Http.endpoint({
         verb: GET,
         path: {j|/asset/:asset|j},
         handler: req => {
-          open! Sihl.Core.Http.Endpoint;
+          open! Sihl.App.Http.Endpoint;
           let%Async {asset} = req.requireParams(params_decode);
-          Async.async @@ Sihl.Core.Http.Endpoint.OkFile("dist/" ++ asset);
+          Async.async @@ Sihl.App.Http.Endpoint.OkFile("dist/" ++ asset);
         },
       });
   };
 
   module App = {
     let endpoint = () =>
-      Sihl.Core.Http.endpoint({
+      Sihl.App.Http.endpoint({
         verb: GET,
         path: {j|(/|/app|/app/*)|j},
         handler: _ => {
-          open! Sihl.Core.Http.Endpoint;
-          Async.async @@ Sihl.Core.Http.Endpoint.OkFile("dist/index.html");
+          open! Sihl.App.Http.Endpoint;
+          Async.async @@ Sihl.App.Http.Endpoint.OkFile("dist/index.html");
         },
       });
   };
@@ -156,17 +156,17 @@ module Client = {
 module AdminUi = {
   module Issues = {
     let endpoint = (root, database) =>
-      Sihl.Core.Http.dbEndpoint({
+      Sihl.App.Http.dbEndpoint({
         database,
         verb: GET,
         path: {j|/admin/$root/issues/|j},
         handler: (conn, req) => {
-          open! Sihl.Core.Http.Endpoint;
+          open! Sihl.App.Http.Endpoint;
           let%Async token =
-            Sihl.Core.Http.requireSessionCookie(req, "/admin/login/");
+            Sihl.App.Http.requireSessionCookie(req, "/admin/login/");
           let%Async user = Sihl.Users.User.authenticate(conn, token);
           let%Async issues = Service.Issue.getAll((conn, user));
-          let issues = issues |> Sihl.Core.Db.Repo.Result.rows;
+          let issues = issues |> Sihl.Core.Db.Result.Query.rows;
           Async.async @@
           OkHtml(Sihl.Users.AdminUi.render(<AdminUi.Issues issues />));
         },
@@ -175,17 +175,17 @@ module AdminUi = {
 
   module Boards = {
     let endpoint = (root, database) =>
-      Sihl.Core.Http.dbEndpoint({
+      Sihl.App.Http.dbEndpoint({
         database,
         verb: GET,
         path: {j|/admin/$root/boards/|j},
         handler: (conn, req) => {
-          open! Sihl.Core.Http.Endpoint;
+          open! Sihl.App.Http.Endpoint;
           let%Async token =
-            Sihl.Core.Http.requireSessionCookie(req, "/admin/login/");
+            Sihl.App.Http.requireSessionCookie(req, "/admin/login/");
           let%Async user = Sihl.Users.User.authenticate(conn, token);
           let%Async boards = Service.Board.getAll((conn, user));
-          let boards = boards |> Sihl.Core.Db.Repo.Result.rows;
+          let boards = boards |> Sihl.Core.Db.Result.Query.rows;
           Async.async @@
           OkHtml(Sihl.Users.AdminUi.render(<AdminUi.Boards boards />));
         },

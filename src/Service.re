@@ -2,7 +2,7 @@ module Async = Sihl.Core.Async;
 
 module Board = {
   let getAll = ((conn, user)) => {
-    open! Sihl.Core.Http.Endpoint;
+    open! Sihl.App.Http.Endpoint;
     if (!Sihl.Users.User.isAdmin(user)) {
       abort @@ Forbidden("Not allowed");
     };
@@ -10,7 +10,7 @@ module Board = {
   };
 
   let getAllByUser = ((conn, user), ~userId) => {
-    open! Sihl.Core.Http.Endpoint;
+    open! Sihl.App.Http.Endpoint;
     if (!Sihl.Users.User.isAdmin(user) && user.id !== userId) {
       abort @@ Forbidden("Not allowed");
     };
@@ -26,7 +26,7 @@ module Board = {
 
 module Issue = {
   let getAll = ((conn, user)) => {
-    open! Sihl.Core.Http.Endpoint;
+    open! Sihl.App.Http.Endpoint;
     if (!Sihl.Users.User.isAdmin(user)) {
       abort @@ Forbidden("Not allowed");
     };
@@ -34,7 +34,7 @@ module Issue = {
   };
 
   let getAllByBoard = ((conn, user), ~boardId) => {
-    open! Sihl.Core.Http.Endpoint;
+    open! Sihl.App.Http.Endpoint;
     let%Async board =
       Repository.Board.Get.query(conn, ~boardId)
       |> abortIfErr(NotFound("Board not found with that id"));
@@ -45,7 +45,7 @@ module Issue = {
   };
 
   let create = ((conn, user), ~title, ~description, ~board) => {
-    open! Sihl.Core.Http.Endpoint;
+    open! Sihl.App.Http.Endpoint;
     let%Async board =
       Repository.Board.Get.query(conn, ~boardId=board)
       |> abortIfErr(NotFound("Board not found with that id"));
@@ -58,7 +58,7 @@ module Issue = {
   };
 
   let complete = ((conn, user), ~issueId) => {
-    open! Sihl.Core.Http.Endpoint;
+    open! Sihl.App.Http.Endpoint;
     let%Async issue =
       Repository.Issue.Get.query(conn, ~issueId)
       |> abortIfErr(NotFound("Issue not found with that id"));

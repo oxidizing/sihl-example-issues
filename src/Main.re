@@ -11,4 +11,4 @@ let adminUiPages = [
 
 let apps = [Sihl.Users.App.app(adminUiPages), App.app()];
 
-Sihl.Core.Main.Cli.execute(apps, Node.Process.argv);
+Sihl.App.Main.Cli.execute(apps, Node.Process.argv);

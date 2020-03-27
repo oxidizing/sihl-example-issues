@@ -14,11 +14,10 @@ let routes = database => [
 ];
 
 let app = () =>
-  Sihl.Core.Main.App.make(
+  Sihl.App.Main.App.make(
     ~name,
     ~namespace,
     ~routes,
-    ~clean=[Repository.Issue.Clean.run, Repository.Board.Clean.run],
     ~migration=Migrations.MariaDb.make(~namespace),
     ~commands=[],
   );
