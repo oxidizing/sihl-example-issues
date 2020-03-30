@@ -209,6 +209,54 @@ module User = {
     };
   };
 
+  module RequestPasswordReset = {
+    [@decco]
+    type t = {email: string};
+
+    let f = (~email) => {
+      let body = {j|
+       {
+         "email": "$(email)"
+       }
+       |j};
+      Fetch.fetchWithInit(
+        ClientConfig.baseUrl() ++ "/users/request-password-reset",
+        Fetch.RequestInit.make(
+          ~method_=Post,
+          ~body=Fetch.BodyInit.make(body),
+          (),
+        ),
+      )
+      |> toResult;
+    };
+  };
+
+  module ResetPassword = {
+    [@decco]
+    type t = {
+      token: string,
+      newPassword: string,
+    };
+
+    let f = (~token, ~newPassword) => {
+      let body = {j|
+       {
+         "token": "$(token)",
+         "newPassword": "$(newPassword)"
+       }
+       |j};
+      Fetch.fetchWithInit(
+        ClientConfig.baseUrl() ++ "/users/reset-password",
+        Fetch.RequestInit.make(
+          ~method_=Post,
+          ~body=Fetch.BodyInit.make(body),
+          (),
+        ),
+      )
+      |> toResult;
+    };
+  };
+
   module Login = {
     [@decco]
     type t = {
