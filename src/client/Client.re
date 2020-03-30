@@ -3,6 +3,7 @@ module Async = Sihl.Core.Async;
 module Board = ClientBoardPage;
 module Register = ClientRegisterPage;
 module Login = ClientLoginPage;
+module PasswordReset = ClientPasswordReset;
 module NotFound = ClientNotFound;
 
 module Route = {
@@ -14,6 +15,10 @@ module Route = {
     | [] =>
       <ClientLayout.ForwardIfLoggedIn url="/app/boards/">
         <Login />
+      </ClientLayout.ForwardIfLoggedIn>
+    | ["app", "password-reset"] =>
+      <ClientLayout.ForwardIfLoggedIn url="/app/boards/">
+        <PasswordReset />
       </ClientLayout.ForwardIfLoggedIn>
     | ["app", "register"] =>
       <ClientLayout.ForwardIfLoggedIn url="/app/boards/">

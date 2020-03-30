@@ -87,6 +87,14 @@ let make = () => {
             </button>
           </div>
         </div>
+        <a
+          href="/app/password-reset"
+          onClick={event => {
+            ReactEvent.Mouse.preventDefault(event);
+            ReasonReactRouter.push("/app/password-reset");
+          }}>
+          {React.string("Forgot your password?")}
+        </a>
       </div>
       <div className="column is-one-quarter" />
     </div>
