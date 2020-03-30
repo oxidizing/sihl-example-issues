@@ -115,8 +115,11 @@ module Action = {
     | (state, StartAddBoard(boardId, title)) =>
       State.addBoard(state, ~boardId, ~title)
     | (state, SucceedAddBoard(oldBoardId, board)) =>
-      State.updateBoard(state, ~oldBoardId, ~board)
-    | (state, FailAddBoard(boardId)) => State.removeBoard(state, ~boardId)
+      ReasonReactRouter.push("/app/boards/" ++ board.id);
+      State.updateBoard(state, ~oldBoardId, ~board);
+    | (state, FailAddBoard(boardId)) =>
+      ReasonReactRouter.push("/app/boards/");
+      State.removeBoard(state, ~boardId);
     | (state, SetIssues(issues)) => State.setIssues(state, ~issues)
     | (state, SetBoards(boards)) => State.setBoards(state, ~boards)
     };
@@ -155,11 +158,9 @@ module AddBoard = {
                | Ok(board) =>
                  setTitle(_ => "");
                  dispatch(Action.SucceedAddBoard(boardId, board));
-                 ReasonReactRouter.push("/app/boards/" ++ boardId);
                | Error(msg) =>
                  setError(_ => Some("Failed create board: " ++ msg));
                  dispatch(Action.FailAddBoard(boardId));
-                 ReasonReactRouter.push("/app/boards/");
                },
              )}
             ->ignore;
