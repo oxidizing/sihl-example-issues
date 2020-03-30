@@ -983,10 +983,10 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@sihl/core@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.10.tgz#c7bb88f6b38523df1180d724bc4acf51132b1b29"
-  integrity sha512-rcui0dn7sbR8+DKfxC0j4TpHmY+9ruxasarh6b4ArjphyVNohQAq0JA43ltoHq2ZFCR8Gi7SXGtnI9JPPhrJyA==
+"@sihl/core@0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.12.tgz#47fbfa1c0b0b0e20675343be090df0cbffb663b1"
+  integrity sha512-V2N1d48DSDPF8WJeOphWr7bXvq/IbxhyCq5HcGDpHz36FoI57HofdhkY0rS5xwEiK00DirKCe5RVLsOGYTesRw==
   dependencies:
     "@glennsl/bs-jest" "^0.4.9"
     bcrypt "^3.0.8"
@@ -995,12 +995,19 @@
     bs-express "^1.0.1"
     cookie-parser "^1.4.4"
     isomorphic-fetch "^2.2.1"
+
+"@sihl/mysql@0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@sihl/mysql/-/mysql-0.0.12.tgz#8a6b2e7c404ee0cdf772532a130cdd7004c4f86b"
+  integrity sha512-bVZVSodXKKb0wdmhZJcUbSSK42IOGrISuCAGGYr84VJwh1epmMH6UA4ODYIdQfWLfHUz0B9CeCdQ/szWljuBuA==
+  dependencies:
+    bluebird "^3.7.2"
     mysql2 "^2.1.0"
 
-"@sihl/users@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.10.tgz#5b6876b1772c323562dc097397c7f01ffff96fae"
-  integrity sha512-X4zlhXLIDkyfdEoxZSoRa1CM+CZ4yO7NVj1JsG3EDFzIWk/xmEVXscuTPmh/+r6XPOG+cyS6dBok0mOcaxPMHA==
+"@sihl/users@0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.12.tgz#332a65a923b281abfe76b484a89fb7eb04856c52"
+  integrity sha512-GRLYenNRP4SvTXdU4HDUAa1cS7Wd75MQNX0eCpw1c6ldScrgNaD4kw9gr/1pcKd+vAai2nyPlZ8V9oNGIxXPiQ==
   dependencies:
     bs-fetch "^0.5.1"
     bs-let "^0.1.16"
