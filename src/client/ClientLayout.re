@@ -127,7 +127,7 @@ let make = (~children) => {
             {React.string(" Oxidizing Systems")}
           </a>
           {React.string(" | ")}
-          {React.string("v0.0.1")}
+          {React.string("v0.0.2")}
         </p>
       </div>
     </footer>
