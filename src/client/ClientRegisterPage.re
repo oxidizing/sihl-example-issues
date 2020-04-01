@@ -34,6 +34,7 @@ let make = () => {
   let (familyName, setFamilyName) = React.useState(() => None);
   let (email, setEmail) = React.useState(() => None);
   let (password, setPassword) = React.useState(() => None);
+  let (isLoading, setIsLoading) = React.useState(() => false);
   let canSubmit =
     switch (username, givenName, familyName, email, password) {
     | (Some(_), Some(_), Some(_), Some(_), Some(_)) => true
@@ -122,15 +123,19 @@ let make = () => {
               value={password->Belt.Option.getWithDefault("")}
               onKeyDown={event =>
                 ReactEvent.Keyboard.which(event) === 13
-                  ? register(
-                      setError,
-                      setMsg,
-                      ~username,
-                      ~givenName,
-                      ~familyName,
-                      ~email,
-                      ~password,
-                    )
+                  ? {
+                      setIsLoading(_ => true);
+                      register(
+                        setError,
+                        setMsg,
+                        ~username,
+                        ~givenName,
+                        ~familyName,
+                        ~email,
+                        ~password,
+                      )
+                      ->Async.mapAsync(_ => setIsLoading(_ => false));
+                    }
                     ->ignore
                   : ()
               }
@@ -144,9 +149,10 @@ let make = () => {
         <div className="field is-grouped">
           <div className="control">
             <button
-              className="button is-link"
+              className={"button is-link " ++ (isLoading ? "is-loading" : "")}
               disabled={!canSubmit}
               onClick={_ => {
+                setIsLoading(_ => true);
                 let _ =
                   register(
                     setError,
@@ -156,7 +162,8 @@ let make = () => {
                     ~familyName,
                     ~email,
                     ~password,
-                  );
+                  )
+                  ->Async.mapAsync(_ => setIsLoading(_ => false));
                 ();
               }}>
               {React.string("Register")}

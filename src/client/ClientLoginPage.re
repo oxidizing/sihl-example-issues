@@ -19,6 +19,7 @@ let login = (setError, ~email, ~password) => {
 let make = () => {
   let (email, setEmail) = React.useState(() => None);
   let (password, setPassword) = React.useState(() => None);
+  let (isLoading, setIsLoading) = React.useState(() => false);
   let canSubmit =
     switch (email, password) {
     | (Some(_), Some(_)) => true
@@ -62,7 +63,13 @@ let make = () => {
               value={password->Belt.Option.getWithDefault("")}
               onKeyDown={event =>
                 ReactEvent.Keyboard.which(event) === 13
-                  ? login(~email, ~password)->ignore : ()
+                  ? {
+                    setIsLoading(_ => true);
+                    login(~email, ~password)
+                    ->Async.mapAsync(_ => setIsLoading(_ => false))
+                    ->ignore;
+                  }
+                  : ()
               }
               className="input"
               name="password"
@@ -77,11 +84,13 @@ let make = () => {
         <div className="field is-grouped">
           <div className="control">
             <button
-              className="button is-link"
+              className={"button is-link " ++ (isLoading ? "is-loading" : "")}
               disabled={!canSubmit}
               onClick={_ => {
-                let _ = login(~email, ~password);
-                ();
+                setIsLoading(_ => true);
+                login(~email, ~password)
+                ->Async.mapAsync(_ => setIsLoading(_ => false))
+                ->ignore;
               }}>
               {React.string("Login")}
             </button>
