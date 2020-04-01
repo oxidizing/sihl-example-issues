@@ -28,9 +28,9 @@
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "reason-react": "^0.7.0",
-    "@sihl/core": "0.0.13",
-    "@sihl/users": "0.0.13",
-    "@sihl/mysql": "0.0.13"
+    "@sihl/core": "0.0.15",
+    "@sihl/users": "0.0.15",
+    "@sihl/mysql": "0.0.15"
   },
   "devDependencies": {
     "bs-platform": "^7.1.0"

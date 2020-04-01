@@ -20,4 +20,5 @@ let app = () =>
     ~routes,
     ~migration=Migrations.MariaDb.make(~namespace),
     ~commands=[],
+    ~configurationSchema=[],
   );
