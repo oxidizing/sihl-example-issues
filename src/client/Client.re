@@ -3,8 +3,9 @@ module Async = Sihl.Core.Async;
 module Board = ClientBoardPage;
 module Register = ClientRegisterPage;
 module Login = ClientLoginPage;
-module PasswordReset = ClientPasswordReset;
+module PasswordReset = ClientPasswordResetPage;
 module NotFound = ClientNotFound;
+module ConfirmEmail = ClientConfirmEmailPage;
 
 module Route = {
   [@react.component]
@@ -20,6 +21,7 @@ module Route = {
       <ClientLayout.ForwardIfLoggedIn url="/app/boards/">
         <PasswordReset />
       </ClientLayout.ForwardIfLoggedIn>
+    | ["app", "confirm-email"] => <ConfirmEmail />
     | ["app", "register"] =>
       <ClientLayout.ForwardIfLoggedIn url="/app/boards/">
         <Register />

@@ -209,6 +209,15 @@ module User = {
     };
   };
 
+  module ConfirmEmail = {
+    let f = (~token) => {
+      Fetch.fetch(
+        ClientConfig.baseUrl() ++ "/users/confirm-email?token=" ++ token,
+      )
+      |> toResult;
+    };
+  };
+
   module RequestPasswordReset = {
     [@decco]
     type t = {email: string};
