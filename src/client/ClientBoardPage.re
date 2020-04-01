@@ -121,7 +121,12 @@ module Action = {
       ReasonReactRouter.push("/app/boards/");
       State.removeBoard(state, ~boardId);
     | (state, SetIssues(issues)) => State.setIssues(state, ~issues)
-    | (state, SetBoards(boards)) => State.setBoards(state, ~boards)
+    | (state, SetBoards(boards)) =>
+      switch (boards) {
+      | [board, ..._] => ReasonReactRouter.push("/app/boards/" ++ board.id)
+      | _ => ()
+      };
+      State.setBoards(state, ~boards);
     };
 };
 
