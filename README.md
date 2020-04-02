@@ -11,9 +11,11 @@ You can check out the live demo here: [https://sihl-example-issues.oxidizing.io/
 ## Features
 
 - Login & Register (thanks to [@sihl/users](https://www.npmjs.com/package/@sihl/users))
+- Confirm email address
+- Reset password
 - Creation of boards
 - Creation of issues on a board
-- Mark issues as **completed**
+- Mark issues as completed
 
 ## Description
 
