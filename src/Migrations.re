@@ -34,5 +34,5 @@ CREATE TABLE $(namespace)_issues (
 |j},
     ),
   ];
-  let make = (~namespace) => Sihl.Core.Db.Migration.{namespace, steps};
+  let make = (~namespace) => Sihl.Common.Db.Migration.{namespace, steps};
 };

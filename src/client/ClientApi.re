@@ -1,4 +1,4 @@
-module Async = Sihl.Core.Async;
+module Async = Sihl.Common.Async;
 
 module Http = {
   module Msg = {
@@ -25,12 +25,12 @@ let decodeRespone = (response, decode) => {
         switch (decode(json)) {
         | Belt.Result.Ok(result) => Belt.Result.Ok(result)
         | Belt.Result.Error(error) =>
-          Js.log(Sihl.Core.Error.Decco.stringify(error));
+          Js.log(Sihl.Common.Error.Decco.stringify(error));
           Belt.Result.Error(
             "Invalid response retrieved url="
             ++ Fetch.Response.url(response)
             ++ " "
-            ++ Sihl.Core.Error.Decco.stringify(error),
+            ++ Sihl.Common.Error.Decco.stringify(error),
           );
         },
       );

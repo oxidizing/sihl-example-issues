@@ -1,4 +1,4 @@
-module Async = Sihl.Core.Async;
+module Async = Sihl.Common.Async;
 
 module Layout = ClientLayout;
 module Login = ClientLoginPage;
@@ -155,7 +155,7 @@ module AddBoard = {
           className="button is-info"
           onClick={event => {
             ReactEvent.Mouse.preventDefault(event);
-            {let boardId = Sihl.Core.Uuid.V4.uuidv4();
+            {let boardId = Sihl.Common.Uuid.V4.uuidv4();
              dispatch(Action.StartAddBoard(boardId, title));
              let%Async result = ClientApi.Board.Add.f(~title);
              Async.async(
@@ -323,7 +323,7 @@ module Board = {
 
 module AddIssue = {
   let addIssue = (setError, dispatch, ~boardId, ~title, ~description) => {
-    let issueId = Sihl.Core.Uuid.V4.uuidv4();
+    let issueId = Sihl.Common.Uuid.V4.uuidv4();
     dispatch(Action.StartAddIssue(issueId, boardId, title, description));
     let%Async result = ClientApi.Issue.Add.f(~boardId, ~title, ~description);
     Async.async(
@@ -375,7 +375,7 @@ module AddIssue = {
         className="button is-info"
         onClick={event => {
           ReactEvent.Mouse.preventDefault(event);
-          let issueId = Sihl.Core.Uuid.V4.uuidv4();
+          let issueId = Sihl.Common.Uuid.V4.uuidv4();
           dispatch(
             Action.StartAddIssue(issueId, boardId, title, description),
           );

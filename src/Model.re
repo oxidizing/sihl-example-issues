@@ -10,7 +10,7 @@ module Issue = {
   };
 
   let make = (~title, ~description, ~board) => {
-    id: Sihl.Core.Uuid.V4.uuidv4(),
+    id: Sihl.Common.Uuid.V4.uuidv4(),
     title,
     description,
     board,
@@ -41,7 +41,7 @@ module Board = {
   };
 
   let make = (~title, ~owner) => {
-    id: Sihl.Core.Uuid.V4.uuidv4(),
+    id: Sihl.Common.Uuid.V4.uuidv4(),
     title,
     owner,
     status: "active",

@@ -1,4 +1,4 @@
-module Async = Sihl.Core.Async;
+module Async = Sihl.Common.Async;
 module Layout = ClientLayout;
 
 let login = (setError, ~email, ~password) => {

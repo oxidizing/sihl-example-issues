@@ -1,4 +1,4 @@
-module Async = Sihl.Core.Async;
+module Async = Sihl.Common.Async;
 
 module GetBoardsByUser = {
   [@decco]
@@ -19,7 +19,7 @@ module GetBoardsByUser = {
         let%Async {userId} = req.requireParams(params_decode);
         let%Async boards = Service.Board.getAllByUser((conn, user), ~userId);
         let response =
-          boards |> Sihl.Core.Db.Result.Query.rows |> body_out_encode;
+          boards |> Sihl.Common.Db.Result.Query.rows |> body_out_encode;
         Async.async @@ Sihl.App.Http.Endpoint.OkJson(response);
       },
     });
@@ -45,7 +45,7 @@ module GetIssuesByBoard = {
         let%Async issues =
           Service.Issue.getAllByBoard((conn, user), ~boardId);
         let response =
-          issues |> Sihl.Core.Db.Result.Query.rows |> body_out_encode;
+          issues |> Sihl.Common.Db.Result.Query.rows |> body_out_encode;
         Async.async @@ Sihl.App.Http.Endpoint.OkJson(response);
       },
     });
@@ -166,7 +166,7 @@ module AdminUi = {
             Sihl.App.Http.requireSessionCookie(req, "/admin/login/");
           let%Async user = Sihl.Users.User.authenticate(conn, token);
           let%Async issues = Service.Issue.getAll((conn, user));
-          let issues = issues |> Sihl.Core.Db.Result.Query.rows;
+          let issues = issues |> Sihl.Common.Db.Result.Query.rows;
           Async.async @@
           OkHtml(Sihl.Users.AdminUi.render(<AdminUi.Issues issues />));
         },
@@ -185,7 +185,7 @@ module AdminUi = {
             Sihl.App.Http.requireSessionCookie(req, "/admin/login/");
           let%Async user = Sihl.Users.User.authenticate(conn, token);
           let%Async boards = Service.Board.getAll((conn, user));
-          let boards = boards |> Sihl.Core.Db.Result.Query.rows;
+          let boards = boards |> Sihl.Common.Db.Result.Query.rows;
           Async.async @@
           OkHtml(Sihl.Users.AdminUi.render(<AdminUi.Boards boards />));
         },

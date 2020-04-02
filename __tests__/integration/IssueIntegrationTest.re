@@ -41,7 +41,7 @@ Expect.(
 
     let Model.Board.{title} = boards |> Belt.List.headExn;
 
-    title |> expect |> toBe("Board title") |> Sihl.Core.Async.async;
+    title |> expect |> toBe("Board title") |> Sihl.Common.Async.async;
   })
 );
 
@@ -92,7 +92,7 @@ Expect.(
 
     let Model.Issue.{title} = issues |> Belt.List.headExn;
 
-    title |> expect |> toBe("Issue title") |> Sihl.Core.Async.async;
+    title |> expect |> toBe("Issue title") |> Sihl.Common.Async.async;
   })
 );
 
@@ -132,7 +132,7 @@ Expect.(
       |> Routes.GetIssuesByBoard.body_out_decode
       |> Belt.Result.getExn
       |> Belt.List.toArray;
-    issues |> expect |> toHaveLength(0) |> Sihl.Core.Async.async;
+    issues |> expect |> toHaveLength(0) |> Sihl.Common.Async.async;
   })
 );
 
@@ -182,6 +182,6 @@ Expect.(
 
     let Model.Issue.{status} = issues |> Belt.List.headExn;
 
-    status |> expect |> toBe("completed") |> Sihl.Core.Async.async;
+    status |> expect |> toBe("completed") |> Sihl.Common.Async.async;
   })
 );

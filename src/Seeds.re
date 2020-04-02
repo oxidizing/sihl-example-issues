@@ -1,4 +1,4 @@
-module Async = Sihl.Core.Async;
+module Async = Sihl.Common.Async;
 
 let board = (~user, ~title, conn) =>
   Service.Board.create((conn, user), ~title);
