@@ -18,7 +18,7 @@ ON issues_boards.id = issues_issues.board;
 ";
 
     let query = connection =>
-      Sihl.App.Db.Repo.getMany(
+      Sihl.App.Repo.getMany(
         ~connection,
         ~stmt,
         ~decode=Model.Issue.t_decode,
@@ -47,7 +47,7 @@ WHERE issues_boards.uuid = UNHEX(REPLACE(?, '-', ''));
     type params = string;
 
     let query = (connection, ~boardId) =>
-      Sihl.App.Db.Repo.getMany(
+      Sihl.App.Repo.getMany(
         ~connection,
         ~stmt,
         ~decode=Model.Issue.t_decode,
@@ -77,7 +77,7 @@ WHERE users_users.uuid = UNHEX(REPLACE(?, '-', ''));
     type params = string;
 
     let query = (connection, ~userId) =>
-      Sihl.App.Db.Repo.getMany(
+      Sihl.App.Repo.getMany(
         ~connection,
         ~stmt,
         ~decode=Model.Issue.t_decode,
@@ -107,7 +107,7 @@ WHERE issues_issues.uuid = UNHEX(REPLACE(?, '-', ''));
     type parameters = string;
 
     let query = (connection, ~issueId) =>
-      Sihl.App.Db.Repo.getOne(
+      Sihl.App.Repo.getOne(
         ~connection,
         ~stmt,
         ~parameters=parameters_encode(issueId),
@@ -151,7 +151,7 @@ status = VALUES(status)
     );
 
     let query = (connection, ~issue: Model.Issue.t) =>
-      Sihl.App.Db.Repo.execute(
+      Sihl.App.Repo.execute(
         ~parameters=
           parameters_encode((
             issue.id,
@@ -185,7 +185,7 @@ WHERE issues_boards.uuid = UNHEX(REPLACE(?, '-', ''));
     type params = string;
 
     let query = (connection, ~boardId) =>
-      Sihl.App.Db.Repo.getOne(
+      Sihl.App.Repo.getOne(
         ~connection,
         ~stmt,
         ~parameters=params_encode(boardId),
@@ -211,7 +211,7 @@ WHERE users_users.uuid = UNHEX(REPLACE(?, '-', ''));
     type params = string;
 
     let query = (connection, ~userId) =>
-      Sihl.App.Db.Repo.getMany(
+      Sihl.App.Repo.getMany(
         ~connection,
         ~stmt,
         ~decode=Model.Board.t_decode,
@@ -233,7 +233,7 @@ ON users_users.id  = issues_boards.owner;
 ";
 
     let query = connection =>
-      Sihl.App.Db.Repo.getMany(
+      Sihl.App.Repo.getMany(
         ~connection,
         ~stmt,
         ~decode=Model.Board.t_decode,
@@ -264,7 +264,7 @@ status = VALUES(status)
     type parameters = (string, string, string, string);
 
     let query = (connection, ~board: Model.Board.t) =>
-      Sihl.App.Db.Repo.execute(
+      Sihl.App.Repo.execute(
         ~parameters=
           parameters_encode((
             board.id,

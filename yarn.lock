@@ -983,10 +983,10 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@sihl/core@0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.17.tgz#ec171e78381a230a0c105fa17da1b83a402f6480"
-  integrity sha512-Uj06GBtj8Bin1ZYSbXjnB9Nwj4KLfr/3zfmyGHcsn071a2No5wsxdzt4EJm751vtXrFYroB7hWCdnXb6+MbdaQ==
+"@sihl/core@0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@sihl/core/-/core-0.0.18.tgz#ea03e8fdc092641762b14c79e6f6f066cc6a9d90"
+  integrity sha512-MFtxR7R8PJI9lmS8ohp0AaUI5zPwqrz75tkmMbWwi3FUd+pDTSFFoo83HJVFJKKUtCf95T+Lki1KIAgAyy4URg==
   dependencies:
     "@glennsl/bs-jest" "^0.4.9"
     bcrypt "^3.0.8"
@@ -997,18 +997,18 @@
     isomorphic-fetch "^2.2.1"
     nodemailer "^6.4.6"
 
-"@sihl/mysql@0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@sihl/mysql/-/mysql-0.0.17.tgz#20d5f0d4ce912e1a69491d1f632c99676cdca371"
-  integrity sha512-rhbG+vb8UMAnk65kUJBNMmLgnbnl+Y5IX1Cq4z3AJWDw7Y7ynXjy8b7dDWDfm6lQaqYkrVnn16Yar+vPQ9GrIA==
+"@sihl/mysql@0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@sihl/mysql/-/mysql-0.0.18.tgz#1fa5b7862289b7d3750c4800ee56c384b7184b1d"
+  integrity sha512-AF7pYO9NtitqJIaEBZe3hPQUg8z3gAzErJA8vlrt6oOdZu/PbzblL2Pu48dehxPKIOeqfEKb/yQeotW6fbb9/g==
   dependencies:
     bluebird "^3.7.2"
     mysql2 "^2.1.0"
 
-"@sihl/users@0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.17.tgz#1f43dafadb971ae7c258f03c760a34c0e8569128"
-  integrity sha512-5dK31hHGBI1G9g7mcovQ3ypnWcu6jkuw5FYP/kQFqj65AEmbThYANrjgRkM3uZ4m00cB+6wtnJyKc1xSGkL9WA==
+"@sihl/users@0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@sihl/users/-/users-0.0.18.tgz#eaa3989bb55d782634bedaf9ab21253b2393f591"
+  integrity sha512-LT/1Uy5pJ7oSZacsctG48RI05c9/ebD8+I2nXJwE7HlezYQa/8EQl7dVrHRmdOLAqQQ8C6OY8kkDIEXoDN6Qhw==
   dependencies:
     bs-fetch "^0.5.1"
     bs-let "^0.1.16"
