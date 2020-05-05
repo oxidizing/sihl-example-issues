@@ -1,0 +1,19 @@
+(library
+ (name sihl_example_issues)
+ (public_name sihl_example_issues)
+ (libraries
+  base
+  sihl_core
+  sihl_users
+  )
+ (preprocess
+  (pps
+   ppx_rapper
+   ppx_fields_conv
+   ppx_deriving_yojson
+   ppx_sexp_conv
+   tyxml-ppx
+   ppx_string_interpolation
+   )
+  )
+ )
