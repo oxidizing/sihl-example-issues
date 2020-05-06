@@ -1,5 +1,6 @@
 module Issue = {
   [@decco]
+  [@deriving yojson]
   type t = {
     id: string,
     title: string,
@@ -32,6 +33,7 @@ module Issue = {
 };
 
 module Board = {
+  [@deriving yojson]
   [@decco]
   type t = {
     id: string,

@@ -10,7 +10,7 @@ module Board = {
 
   let get_all_by_user = (request, user, ~user_id) => {
     if (!Sihl_users.Model.User.is_admin(user)
-        && Sihl_users.Model.User.is_owner(user, user_id)) {
+        && !Sihl_users.Model.User.is_owner(user, user_id)) {
       Sihl_core.Fail.raise_no_permissions("Not allowed");
     };
     Repository.Board.get_all_by_user(~user_id)
@@ -42,7 +42,7 @@ module Issue = {
            request,
          );
     if (!Sihl_users.Model.User.is_admin(user)
-        && Sihl_users.Model.User.is_owner(user, board.owner)) {
+        && !Sihl_users.Model.User.is_owner(user, board.owner)) {
       Sihl_core.Fail.raise_no_permissions("Not allowed");
     };
     Repository.Issue.get_all_by_board(~id=board_id)
@@ -57,7 +57,7 @@ module Issue = {
            request,
          );
     if (!Sihl_users.Model.User.is_admin(user)
-        && Sihl_users.Model.User.is_owner(user, board.owner)) {
+        && !Sihl_users.Model.User.is_owner(user, board.owner)) {
       Sihl_core.Fail.raise_no_permissions("Not allowed");
     };
     let issue = Model.Issue.make(~title, ~description, ~board=board_id);
@@ -77,7 +77,7 @@ module Issue = {
       Repository.Board.get(~id=issue.id)
       |> Sihl_core.Db.query_db_exn(request);
     if (!Sihl_users.Model.User.is_admin(user)
-        && Sihl_users.Model.User.is_owner(user, board.owner)) {
+        && !Sihl_users.Model.User.is_owner(user, board.owner)) {
       Sihl_core.Fail.raise_no_permissions("Not allowed");
     };
     let issue = Model.Issue.complete(issue);

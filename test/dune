@@ -1,0 +1,14 @@
+(test
+ (name test)
+ (libraries
+  base
+  sihl_users
+  sihl_core
+  sihl_example_issues
+  alcotest
+  alcotest-lwt
+  )
+ (preprocess
+  (pps
+   ppx_string_interpolation
+  )))

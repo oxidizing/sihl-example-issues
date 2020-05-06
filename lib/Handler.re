@@ -1,26 +1,22 @@
+open Base;
+let ( let* ) = Lwt.bind;
+
 module GetBoardsByUser = {
   open Sihl_core;
-  let handler = Http.get("", _ => Http.Response.empty |> Lwt.return);
-  /* [@decco] */
-  /* type body_out = list(Model.Board.t); */
-  /* [@decco] */
-  /* type params = {userId: string}; */
-  /* let endpoint = (root, database) => */
-  /*   Sihl.App.Http.dbEndpoint({ */
-  /*     database, */
-  /*     verb: GET, */
-  /*     path: {j|/$root/users/:userId/boards/|j}, */
-  /*     handler: (conn, req) => { */
-  /*       open! Sihl.App.Http.Endpoint; */
-  /*       let%Async token = Sihl.App.Http.requireAuthorizationToken(req); */
-  /*       let%Async user = Sihl.Users.User.authenticate(conn, token); */
-  /*       let%Async {userId} = req.requireParams(params_decode); */
-  /*       let%Async boards = Service.Board.getAllByUser((conn, user), ~userId); */
-  /*       let response = */
-  /*         boards |> Sihl.Common.Db.Result.Query.rows |> body_out_encode; */
-  /*       Async.async @@ Sihl.App.Http.Endpoint.OkJson(response); */
-  /*     }, */
-  /*   }); */
+  [@deriving yojson]
+  type body_out = list(Model.Board.t);
+
+  let handler =
+    Http.get("/issues/users/:id/boards/", req => {
+      let user_id = Http.param(req, "id");
+      let user = Sihl_users.Middleware.Authn.authenticate(req);
+      let* response = Service.Board.get_all_by_user(req, user, ~user_id);
+      response
+      |> body_out_to_yojson
+      |> Yojson.Safe.to_string
+      |> Http.Response.json
+      |> Lwt.return;
+    });
 };
 
 module GetIssuesByBoard = {
@@ -51,25 +47,23 @@ module GetIssuesByBoard = {
 
 module AddBoard = {
   open Sihl_core;
-  let handler = Http.get("", _ => Http.Response.empty |> Lwt.return);
-  /* [@decco] */
-  /* type body_in = {title: string}; */
-  /* [@decco] */
-  /* type body_out = Model.Board.t; */
-  /* let endpoint = (root, database) => */
-  /*   Sihl.App.Http.dbEndpoint({ */
-  /*     database, */
-  /*     verb: POST, */
-  /*     path: {j|/$root/boards/|j}, */
-  /*     handler: (conn, req) => { */
-  /*       open! Sihl.App.Http.Endpoint; */
-  /*       let%Async token = Sihl.App.Http.requireAuthorizationToken(req); */
-  /*       let%Async user = Sihl.Users.User.authenticate(conn, token); */
-  /*       let%Async {title} = req.requireBody(body_in_decode); */
-  /*       let%Async board = Service.Board.create((conn, user), ~title); */
-  /*       Async.async @@ OkJson(body_out_encode(board)); */
-  /*     }, */
-  /*   }); */
+  [@deriving yojson]
+  type body_in = {title: string};
+
+  [@deriving yojson]
+  type body_out = Model.Board.t;
+
+  let handler =
+    Http.post("/issues/boards/", req => {
+      let user = Sihl_users.Middleware.Authn.authenticate(req);
+      let* {title} = Sihl_core.Http.require_body_exn(req, body_in_of_yojson);
+      let* response = Service.Board.create(req, user, ~title);
+      response
+      |> body_out_to_yojson
+      |> Yojson.Safe.to_string
+      |> Http.Response.json
+      |> Lwt.return;
+    });
 };
 
 module AddIssue = {
