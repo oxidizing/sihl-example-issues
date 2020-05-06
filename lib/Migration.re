@@ -35,7 +35,7 @@ CREATE TABLE issues_issues (
 ];
 
 let migration = () => (
-  "users",
+  "issues",
   [
     ("create boards table", create_boards_table),
     ("create issues table", create_issues_table),

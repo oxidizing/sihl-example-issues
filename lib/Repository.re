@@ -185,20 +185,21 @@ module Sql = {
 };
 
 module Issue = {
-  let get_all = connection => Sql.Issue.get_all(connection);
+  let get_all = connection => Sql.Issue.get_all(connection, ());
   let get_all_by_board = (~id, connection) =>
     Sql.Issue.get_all_by_board(connection, ~id);
   let get_all_by_user = (~id, connection) =>
     Sql.Issue.get_all_by_user(connection, ~id);
   let upsert = (~issue, connection) => Sql.Issue.upsert(connection, issue);
+  let get = (~id, connection) => Sql.Issue.get(connection, ~id);
 };
 
 module Board = {
-  let get_all = connection => Sql.Board.get_all(connection);
-  let get_all_by_user = (~id, connection) =>
-    Sql.Board.get_all_by_user(connection, ~id);
+  let get_all = connection => Sql.Board.get_all(connection, ());
+  let get_all_by_user = (~user_id, connection) =>
+    Sql.Board.get_all_by_user(connection, ~id=user_id);
   let get = (~id, connection) => Sql.Board.get(connection, ~id);
-  let upsert = (board, connection) => Sql.Board.upsert(connection, board);
+  let upsert = (~board, connection) => Sql.Board.upsert(connection, board);
 };
 
 let clean = connection => {
