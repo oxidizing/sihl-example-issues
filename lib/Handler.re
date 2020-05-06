@@ -104,33 +104,15 @@ module CompleteIssue = {
 };
 
 module Client = {
-  open Sihl_core;
-  let handler = Http.get("", _ => Http.Response.empty |> Lwt.return);
-  /* module Asset = { */
-  /*   [@decco] */
-  /*   type params = {asset: string}; */
-  /*   let endpoint = () => */
-  /*     Sihl.App.Http.endpoint({ */
-  /*       verb: GET, */
-  /*       path: {j|/asset/:asset|j}, */
-  /*       handler: req => { */
-  /*         open! Sihl.App.Http.Endpoint; */
-  /*         let%Async {asset} = req.requireParams(params_decode); */
-  /*         Async.async @@ Sihl.App.Http.Endpoint.OkFile("dist/" ++ asset); */
-  /*       }, */
-  /*     }); */
-  /* }; */
-  /* module App = { */
-  /*   let endpoint = () => */
-  /*     Sihl.App.Http.endpoint({ */
-  /*       verb: GET, */
-  /*       path: {j|(/|/app|/app/\*)|j}, */
-  /*       handler: _ => { */
-  /*         open! Sihl.App.Http.Endpoint; */
-  /*         Async.async @@ Sihl.App.Http.Endpoint.OkFile("dist/index.html"); */
-  /*       }, */
-  /*     }); */
-  /* }; */
+  let handler =
+    Opium.App.get("/app/**", _ => {
+      let* resp =
+        Cohttp_lwt_unix.Server.respond_file(
+          ~fname="../../../dist/index.html",
+          (),
+        );
+      Lwt.return @@ Opium.Std.Response.of_response_body(resp);
+    });
 };
 
 module AdminUi = {

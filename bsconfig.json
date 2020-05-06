@@ -1,0 +1,30 @@
+{
+  "name": "sihl-example-issues",
+  "version": "0.0.6",
+  "reason": {
+    "react-jsx": 3
+  },
+  "sources": [
+    {
+      "dir" : "client",
+      "subdirs" : true
+    }
+  ],
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "bs-dependencies": [
+    "reason-react",
+    "bs-fetch",
+    "decco"
+  ],
+  "bs-dev-dependencies": [],
+  "warnings": {
+    "error" : "+101"
+  },
+  "ppx-flags": ["decco/ppx", "bs-let/ppx"],
+  "namespace": true,
+  "refmt": 3
+}

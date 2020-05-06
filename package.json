@@ -1,0 +1,37 @@
+{
+  "name": "sihl-example-issues",
+  "version": "0.0.6",
+  "scripts": {
+    "compile": "bsb -make-world",
+    "clean": "bsb -clean-world",
+    "bundle": "parcel build static/index.html --public-url /assets/",
+    "build": "yarn compile && yarn bundle",
+    "watch:compile": "bsb -make-world -w",
+    "watch:bundle": "parcel watch static/index.html --public-url /assets/"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "Josef Erben josef@oxidizing.io",
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.1",
+    "bluebird": "^3.7.2",
+    "bs-fetch": "^0.5.1",
+    "bs-let": "^0.1.16",
+    "bulma": "^0.8.0",
+    "decco": "^1.1.1",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "reason-react": "^0.7.0"
+  },
+  "devDependencies": {
+    "bs-platform": "^7.1.0"
+  },
+  "cacheDirectories": [
+    "dist",
+    "src",
+    "node_modules"
+  ]
+}
