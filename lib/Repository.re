@@ -5,12 +5,12 @@ module Sql = {
       get_many(
         {sql|
         SELECT
-          uuid as @string{id},
-          @string{title},
-          @string?{description},
-          @string{board},
-          @string?{assignee},
-          @string{status}
+          issues_issues.uuid as @string{id},
+          issues_issues.title as @string{title},
+          issues_issues.description as @string?{description},
+          issues_boards.uuid as @string{board},
+          issues_issues.assignee as @string?{assignee},
+          issues_issues.status as @string{status}
         FROM issues_issues
         LEFT JOIN issues_boards
         ON issues_boards.id = issues_issues.board;
@@ -23,12 +23,12 @@ module Sql = {
       get_many(
         {sql|
         SELECT
-          uuid as @string{id},
-          @string{title},
-          @string?{description},
-          @string{board},
-          @string?{assignee},
-          @string{status}
+          issues_issues.uuid as @string{id},
+          issues_issues.title as @string{title},
+          issues_issues.description as @string?{description},
+          issues_boards.uuid as @string{board},
+          issues_issues.assignee as @string?{assignee},
+          issues_issues.status as @string{status}
         FROM issues_issues
         LEFT JOIN issues_boards
         ON issues_boards.id = issues_issues.board
@@ -42,12 +42,12 @@ module Sql = {
       get_many(
         {sql|
         SELECT
-          uuid as @string{id},
-          @string{title},
-          @string?{description},
-          @string{board},
-          @string?{assignee},
-          @string{status}
+          issues_issues.uuid as @string{id},
+          issues_issues.title as @string{title},
+          issues_issues.description as @string?{description},
+          issues_boards.uuid as @string{board},
+          issues_issues.assignee as @string?{assignee},
+          issues_issues.status as @string{status}
         FROM issues_issues
         LEFT JOIN issues_boards
         ON issues_boards.id = issues_issues.board
@@ -61,12 +61,12 @@ module Sql = {
       get_one(
         {sql|
         SELECT
-          uuid as @string{id},
-          @string{title},
-          @string?{description},
-          @string{board},
-          @string?{assignee},
-          @string{status}
+          issues_issues.uuid as @string{id},
+          issues_issues.title as @string{title},
+          issues_issues.description as @string?{description},
+          issues_boards.uuid as @string{board},
+          issues_issues.assignee as @string?{assignee},
+          issues_issues.status as @string{status}
         FROM issues_issues
         LEFT JOIN issues_boards
         ON issues_boards.id = issues_issues.board
@@ -90,14 +90,15 @@ module Sql = {
           %string{id},
           %string{title},
           %string?{description},
-          %string{board},
+          (SELECT issues_boards.id FROM issues_boards
+            WHERE issues_boards.uuid = %string{board}),
           %string?{assignee},
           %string{status}
          ) ON CONFLICT (uuid)
          DO UPDATE SET
            title = %string{title},
            description = %string?{description},
-           board = %string{board},
+           board = (SELECT issues_boards.id FROM issues_boards WHERE issues_boards.uuid = %string{board}),
            assignee = %string?{assignee},
            status = %string{status}
 |sql},
@@ -106,9 +107,11 @@ module Sql = {
     ];
 
     let clean = [%rapper
-      execute({sql|
-        TRUNCATE TABLE users_users CASCADE;
-        |sql})
+      execute(
+        {sql|
+        TRUNCATE TABLE issues_issues CASCADE;
+        |sql},
+      )
     ];
   };
 
@@ -121,8 +124,8 @@ module Sql = {
         SELECT
           issues_boards.uuid as @string{id},
           issues_boards.title as @string{title},
-          @string{owner},
-          @string{status}
+          issues_boards.owner as @string{owner},
+          issues_boards.status as @string{status}
         FROM issues_boards
         |sql},
         record_out,
@@ -135,8 +138,8 @@ module Sql = {
         SELECT
           issues_boards.uuid as @string{id},
           issues_boards.title as @string{title},
-          @string{owner},
-          @string{status}
+          issues_boards.owner as @string{owner},
+          issues_boards.status as @string{status}
         FROM issues_boards
         WHERE issues_boards.owner = %string{id}
         |sql},
@@ -150,8 +153,8 @@ module Sql = {
         SELECT
           issues_boards.uuid as @string{id},
           issues_boards.title as @string{title},
-          @string{owner},
-          @string{status}
+          issues_boards.owner as @string{owner},
+          issues_boards.status as @string{status}
         FROM issues_boards
         WHERE issues_boards.uuid = %string{id}
         |sql},
@@ -181,6 +184,13 @@ module Sql = {
         record_in,
       )
     ];
+    let clean = [%rapper
+      execute(
+        {sql|
+        TRUNCATE TABLE issues_boards CASCADE;
+        |sql},
+      )
+    ];
   };
 };
 
@@ -202,6 +212,9 @@ module Board = {
   let upsert = (~board, connection) => Sql.Board.upsert(connection, board);
 };
 
+let ( let* ) = Lwt_result.bind;
+
 let clean = connection => {
-  Sql.Issue.clean(connection, ());
+  let* () = Sql.Issue.clean(connection, ());
+  Sql.Board.clean(connection, ());
 };

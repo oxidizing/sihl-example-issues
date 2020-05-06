@@ -1,6 +1,6 @@
 module Issue = {
   [@decco]
-  [@deriving yojson]
+  [@deriving (yojson, fields)]
   type t = {
     id: string,
     title: string,
@@ -33,7 +33,7 @@ module Issue = {
 };
 
 module Board = {
-  [@deriving yojson]
+  [@deriving (yojson, fields)]
   [@decco]
   type t = {
     id: string,

@@ -74,13 +74,15 @@ module Issue = {
            request,
          );
     let* board =
-      Repository.Board.get(~id=issue.id)
+      Repository.Board.get(~id=issue.board)
       |> Sihl_core.Db.query_db_exn(request);
     if (!Sihl_users.Model.User.is_admin(user)
         && !Sihl_users.Model.User.is_owner(user, board.owner)) {
       Sihl_core.Fail.raise_no_permissions("Not allowed");
     };
     let issue = Model.Issue.complete(issue);
-    Repository.Issue.upsert(~issue) |> Sihl_core.Db.query_db_exn(request);
+    let* () =
+      Repository.Issue.upsert(~issue) |> Sihl_core.Db.query_db_exn(request);
+    Lwt.return(issue);
   };
 };
