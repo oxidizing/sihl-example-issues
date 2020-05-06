@@ -1,27 +1,45 @@
 version: 2.1
 jobs:
-  test:
-    working_directory: ~/sihl
+  build:
     docker:
-      - image: circleci/node:10.16.3
-      - image: mariadb:10.1.41-bionic
+      - image: ocaml/opam2:4.08
         environment:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: dev
+          TERM: xterm
+      - image: postgres:12.2
+        environment:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: dev
     steps:
+      - run:
+          name: Update opam
+          command: |
+            opam remote remove --all default
+            opam remote add default https://opam.ocaml.org
       - checkout
       - run:
-          name: yarn
-          command: yarn
+          name: Pin packages
+          command: |
+            opam pin add -y -n sihl_example_issues .
       - run:
-          name: build
-          command: yarn build
+          name: Install system dependencies
+          command: opam depext -y sihl_example_issues
       - run:
-          name: test
-          command: yarn test
+          name: Install OCaml dependencies
+          command: opam install --deps-only -y sihl_example_issues
+      - run:
+          name: Build
+          command: opam config exec -- make
+      - run:
+          name: Install OCaml test dependencies
+          # Not using opam install -y -t because it tries to run csv's tests
+          command: opam install -y alcotest alcotest-lwt cohttp-lwt-unix
+      - run:
+          name: Test
+          command: opam config exec -- make test-all
 
 workflows:
   version: 2
-  build_and_test:
+  build:
     jobs:
-      - test
+      - build
