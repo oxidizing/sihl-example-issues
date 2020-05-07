@@ -31,6 +31,7 @@ module Issue = {
   let complete = issue => {...issue, status: "completed"};
   let setStatus = (issue, status) => {...issue, status};
 };
+
 module Board = {
   [@decco]
   type t = {
@@ -49,6 +50,7 @@ module Board = {
 
   let makeId = (~id, ~title, ~owner) => {id, title, owner, status: "active"};
 };
+
 module User = {
   [@decco]
   type t = {

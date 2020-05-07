@@ -174,7 +174,7 @@ module Issue = {
           ~method_=Post,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.getOrThrow().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -203,7 +203,7 @@ module Issue = {
           ~body=Fetch.BodyInit.make(body),
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.getOrThrow().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -222,7 +222,7 @@ module User = {
           ~method_=Get,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.getOrThrow().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -263,17 +263,11 @@ module User = {
   };
 
   module ResetPassword = {
-    [@decco]
-    type t = {
-      token: string,
-      new_password: string,
-    };
-
     let f = (~token, ~newPassword) => {
       let body = {j|
        {
          "token": "$(token)",
-         "newPassword": "$(newPassword)"
+         "new_password": "$(newPassword)"
        }
        |j};
       Fetch.fetchWithInit(
@@ -292,7 +286,8 @@ module User = {
     [@decco]
     type t = {
       token: string,
-      user_id: string,
+      [@decco.key "user_id"]
+      userId: string,
     };
 
     let encode: string => string = [%raw "btoa"];
@@ -317,14 +312,12 @@ module User = {
 
   module Register = {
     [@decco]
-    let f = (~username, ~givenName, ~familyName, ~email, ~password) => {
+    let f = (~username, ~email, ~password) => {
       let body = {j|
        {
          "email": "$(email)",
          "username": "$(username)",
-         "password": "$(password)",
-         "givenName": "$(givenName)",
-         "familyName": "$(familyName)"
+         "password": "$(password)"
        }
        |j};
 
