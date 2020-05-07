@@ -11,7 +11,7 @@ module Issue = {
   };
 
   let make = (~title, ~description, ~board) => {
-    id: "generated",
+    id: Random.generate(),
     title,
     description,
     board,
@@ -42,7 +42,7 @@ module Board = {
   };
 
   let make = (~title, ~owner) => {
-    id: "generated",
+    id: Random.generate(),
     title,
     owner,
     status: "active",
