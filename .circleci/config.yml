@@ -21,6 +21,13 @@ jobs:
           name: Pin packages
           command: |
             opam pin add -y -n sihl_example_issues .
+      # Reason doesn't is not published to OPAM anymore, pin Git repo
+      - run:
+          name: Install reason from Git repo
+          command: opam pin add -y -n reason https://github.com/facebook/reason.git\#3ccf9d8febaa0ee0fdf99e65ab396a1421325c13
+      - run:
+          name: Install sihl_core from Git repo
+          command: opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.20
       # TODO remove this once sihl_core is in OPAM
       - run:
           name: Install sihl_core from Git repo
