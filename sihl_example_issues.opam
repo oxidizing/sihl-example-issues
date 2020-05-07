@@ -13,6 +13,7 @@ bug-reports: "https://github.com/oxidizing/sihl-example-issues/issues"
 depends: [
   "dune" {>= "2"}
   "ocaml" {>= "4.08.0"}
+  "reason" {>= "3.6.0"}
   "lwt" {>= "5.3.0"}
   "base" {>= "v0.13.1"}
   "sihl_core" {>= "0.0.19"}
