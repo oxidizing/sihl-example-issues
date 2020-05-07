@@ -6,7 +6,7 @@
   },
   "sources": [
     {
-      "dir" : "client",
+      "dir" : "src/client",
       "subdirs" : true
     }
   ],

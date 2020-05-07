@@ -22,7 +22,7 @@ let middlewares = () =>
     Opium.Std.(
       middleware(
         Middleware.static(
-          ~local_path="../../../dist/",
+          ~local_path="../../../../dist/",
           ~uri_prefix="/assets",
           (),
         ),

@@ -108,7 +108,7 @@ module Client = {
     Opium.App.get("/app/**", _ => {
       let* resp =
         Cohttp_lwt_unix.Server.respond_file(
-          ~fname="../../../dist/index.html",
+          ~fname="../../../../dist/index.html",
           (),
         );
       Lwt.return @@ Opium.Std.Response.of_response_body(resp);

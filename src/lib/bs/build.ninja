@@ -1,0 +1,96 @@
+g_pkg_flg = -bs-package-name sihl-example-issues -bs-ns SihlExampleIssues
+src_root_dir = /home/josef/src/sihl-example-issues
+bsc = /home/josef/src/sihl-example-issues/node_modules/bs-platform/linux/bsc.exe
+bsdep = /home/josef/src/sihl-example-issues/node_modules/bs-platform/linux/bsb_helper.exe
+warnings =  -warn-error +101
+bsc_flags = 
+ppx_flags = -ppx /home/josef/src/sihl-example-issues/node_modules/decco/ppx -ppx /home/josef/src/sihl-example-issues/node_modules/bs-let/ppx
+g_dpkg_incls = 
+g_ns = -bs-ns SihlExampleIssues
+bsb_dir_group = 0
+g_lib_incls = -I . -I client -I /home/josef/src/sihl-example-issues/node_modules/reason-react/lib/ocaml -I /home/josef/src/sihl-example-issues/node_modules/bs-fetch/lib/ocaml -I /home/josef/src/sihl-example-issues/node_modules/decco/lib/ocaml
+rule build_ast_from_re
+  command = $bsc  $warnings -color always -bs-jsx 3 $ppx_flags $bsc_flags -o $out -bs-syntax-only -bs-binary-ast $in
+  description = [34mBuilding[39m [2m${out}[22m
+build  client/Async.reast : build_ast_from_re $src_root_dir/client/Async.re
+rule build_deps
+  command = $bsdep -hash 6889073f6588cc66cebf46ccc21447eb $g_ns -g $bsb_dir_group $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  client/Async.d : build_deps client/Async.reast
+rule ml_cmj_cmi
+  command = $bsc $g_pkg_flg -color always -bs-suffix $g_lib_incls $warnings $bsc_flags -o $out $in
+  dyndep = $in_e.d
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  client/Async-SihlExampleIssues.cmj |  client/Async-SihlExampleIssues.cmi $src_root_dir/client/Async.bs.js : ml_cmj_cmi client/Async.reast ||  client/Async.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/Model.reast : build_ast_from_re $src_root_dir/client/Model.re
+build  client/Model.d : build_deps client/Model.reast
+build  client/Model-SihlExampleIssues.cmj |  client/Model-SihlExampleIssues.cmi $src_root_dir/client/Model.bs.js : ml_cmj_cmi client/Model.reast ||  client/Model.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/Client.reast : build_ast_from_re $src_root_dir/client/Client.re
+build  client/Client.d : build_deps client/Client.reast
+build  client/Client-SihlExampleIssues.cmj |  client/Client-SihlExampleIssues.cmi $src_root_dir/client/Client.bs.js : ml_cmj_cmi client/Client.reast ||  client/Client.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/Random.reast : build_ast_from_re $src_root_dir/client/Random.re
+build  client/Random.d : build_deps client/Random.reast
+build  client/Random-SihlExampleIssues.cmj |  client/Random-SihlExampleIssues.cmi $src_root_dir/client/Random.bs.js : ml_cmj_cmi client/Random.reast ||  client/Random.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientApi.reast : build_ast_from_re $src_root_dir/client/ClientApi.re
+build  client/ClientApi.d : build_deps client/ClientApi.reast
+build  client/ClientApi-SihlExampleIssues.cmj |  client/ClientApi-SihlExampleIssues.cmi $src_root_dir/client/ClientApi.bs.js : ml_cmj_cmi client/ClientApi.reast ||  client/ClientApi.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientUtils.reast : build_ast_from_re $src_root_dir/client/ClientUtils.re
+build  client/ClientUtils.d : build_deps client/ClientUtils.reast
+build  client/ClientUtils-SihlExampleIssues.cmj |  client/ClientUtils-SihlExampleIssues.cmi $src_root_dir/client/ClientUtils.bs.js : ml_cmj_cmi client/ClientUtils.reast ||  client/ClientUtils.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientConfig.reast : build_ast_from_re $src_root_dir/client/ClientConfig.re
+build  client/ClientConfig.d : build_deps client/ClientConfig.reast
+build  client/ClientConfig-SihlExampleIssues.cmj |  client/ClientConfig-SihlExampleIssues.cmi $src_root_dir/client/ClientConfig.bs.js : ml_cmj_cmi client/ClientConfig.reast ||  client/ClientConfig.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientLayout.reast : build_ast_from_re $src_root_dir/client/ClientLayout.re
+build  client/ClientLayout.d : build_deps client/ClientLayout.reast
+build  client/ClientLayout-SihlExampleIssues.cmj |  client/ClientLayout-SihlExampleIssues.cmi $src_root_dir/client/ClientLayout.bs.js : ml_cmj_cmi client/ClientLayout.reast ||  client/ClientLayout.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientSession.reast : build_ast_from_re $src_root_dir/client/ClientSession.re
+build  client/ClientSession.d : build_deps client/ClientSession.reast
+build  client/ClientSession-SihlExampleIssues.cmj |  client/ClientSession-SihlExampleIssues.cmi $src_root_dir/client/ClientSession.bs.js : ml_cmj_cmi client/ClientSession.reast ||  client/ClientSession.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientNotFound.reast : build_ast_from_re $src_root_dir/client/ClientNotFound.re
+build  client/ClientNotFound.d : build_deps client/ClientNotFound.reast
+build  client/ClientNotFound-SihlExampleIssues.cmj |  client/ClientNotFound-SihlExampleIssues.cmi $src_root_dir/client/ClientNotFound.bs.js : ml_cmj_cmi client/ClientNotFound.reast ||  client/ClientNotFound.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientBoardPage.reast : build_ast_from_re $src_root_dir/client/ClientBoardPage.re
+build  client/ClientBoardPage.d : build_deps client/ClientBoardPage.reast
+build  client/ClientBoardPage-SihlExampleIssues.cmj |  client/ClientBoardPage-SihlExampleIssues.cmi $src_root_dir/client/ClientBoardPage.bs.js : ml_cmj_cmi client/ClientBoardPage.reast ||  client/ClientBoardPage.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientLoginPage.reast : build_ast_from_re $src_root_dir/client/ClientLoginPage.re
+build  client/ClientLoginPage.d : build_deps client/ClientLoginPage.reast
+build  client/ClientLoginPage-SihlExampleIssues.cmj |  client/ClientLoginPage-SihlExampleIssues.cmi $src_root_dir/client/ClientLoginPage.bs.js : ml_cmj_cmi client/ClientLoginPage.reast ||  client/ClientLoginPage.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientNotification.reast : build_ast_from_re $src_root_dir/client/ClientNotification.re
+build  client/ClientNotification.d : build_deps client/ClientNotification.reast
+build  client/ClientNotification-SihlExampleIssues.cmj |  client/ClientNotification-SihlExampleIssues.cmi $src_root_dir/client/ClientNotification.bs.js : ml_cmj_cmi client/ClientNotification.reast ||  client/ClientNotification.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientRegisterPage.reast : build_ast_from_re $src_root_dir/client/ClientRegisterPage.re
+build  client/ClientRegisterPage.d : build_deps client/ClientRegisterPage.reast
+build  client/ClientRegisterPage-SihlExampleIssues.cmj |  client/ClientRegisterPage-SihlExampleIssues.cmi $src_root_dir/client/ClientRegisterPage.bs.js : ml_cmj_cmi client/ClientRegisterPage.reast ||  client/ClientRegisterPage.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientContextProvider.reast : build_ast_from_re $src_root_dir/client/ClientContextProvider.re
+build  client/ClientContextProvider.d : build_deps client/ClientContextProvider.reast
+build  client/ClientContextProvider-SihlExampleIssues.cmj |  client/ClientContextProvider-SihlExampleIssues.cmi $src_root_dir/client/ClientContextProvider.bs.js : ml_cmj_cmi client/ClientContextProvider.reast ||  client/ClientContextProvider.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientConfirmEmailPage.reast : build_ast_from_re $src_root_dir/client/ClientConfirmEmailPage.re
+build  client/ClientConfirmEmailPage.d : build_deps client/ClientConfirmEmailPage.reast
+build  client/ClientConfirmEmailPage-SihlExampleIssues.cmj |  client/ClientConfirmEmailPage-SihlExampleIssues.cmi $src_root_dir/client/ClientConfirmEmailPage.bs.js : ml_cmj_cmi client/ClientConfirmEmailPage.reast ||  client/ClientConfirmEmailPage.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+build  client/ClientPasswordResetPage.reast : build_ast_from_re $src_root_dir/client/ClientPasswordResetPage.re
+build  client/ClientPasswordResetPage.d : build_deps client/ClientPasswordResetPage.reast
+build  client/ClientPasswordResetPage-SihlExampleIssues.cmj |  client/ClientPasswordResetPage-SihlExampleIssues.cmi $src_root_dir/client/ClientPasswordResetPage.bs.js : ml_cmj_cmi client/ClientPasswordResetPage.reast ||  client/ClientPasswordResetPage.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:client
+rule build_package
+  command = $bsc -w -49 -color always -no-alias-deps  $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  SihlExampleIssues.cmi : build_package SihlExampleIssues.mlmap

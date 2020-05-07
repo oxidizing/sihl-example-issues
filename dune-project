@@ -6,7 +6,6 @@
 
 (authors "Josef Erben")
 (license MIT)
-(source (uri "git@github.com:oxidizing/sihl-example-issues.git"))
 (maintainers "josef@oxidizing.io")
 (homepage "https://github.com/oxidizing/sihl-example-issues")
 (bug_reports "https://github.com/oxidizing/sihl-example-issues/issues")

@@ -41,4 +41,3 @@ build: [
     "@doc" {with-doc}
   ]
 ]
-dev-repo: "git@github.com:oxidizing/sihl-example-issues.git"
