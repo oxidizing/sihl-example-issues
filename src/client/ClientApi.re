@@ -1,4 +1,26 @@
-module Async = Sihl.Common.Async;
+module Error = {
+  let stringify = ({Decco.path, Decco.message, Decco.value}) =>
+    "Failed to decode at location="
+    ++ path
+    ++ ", message="
+    ++ message
+    ++ ", json="
+    ++ Js.Json.stringify(value);
+
+  let stringifyResult = res => {
+    switch (res) {
+    | Ok(_) as ok => ok
+    | Error(error) => Error(stringify(error))
+    };
+  };
+
+  let stringifyDecoder = (decoder, json) => {
+    switch (decoder(json)) {
+    | Ok(_) as ok => ok
+    | Error(error) => Error(stringify(error))
+    };
+  };
+};
 
 module Http = {
   module Msg = {
@@ -25,12 +47,12 @@ let decodeRespone = (response, decode) => {
         switch (decode(json)) {
         | Belt.Result.Ok(result) => Belt.Result.Ok(result)
         | Belt.Result.Error(error) =>
-          Js.log(Sihl.Common.Error.Decco.stringify(error));
+          Js.log(Error.stringify(error));
           Belt.Result.Error(
             "Invalid response retrieved url="
             ++ Fetch.Response.url(response)
             ++ " "
-            ++ Sihl.Common.Error.Decco.stringify(error),
+            ++ Error.stringify(error),
           );
         },
       );
@@ -152,7 +174,7 @@ module Issue = {
           ~method_=Post,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.getOrThrow().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -181,7 +203,7 @@ module Issue = {
           ~body=Fetch.BodyInit.make(body),
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.getOrThrow().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
@@ -200,12 +222,12 @@ module User = {
           ~method_=Get,
           ~headers=
             Fetch.HeadersInit.make({
-              "authorization": ClientSession.getOrThrow().token,
+              "authorization": "Bearer " ++ ClientSession.getOrThrow().token,
             }),
           (),
         ),
       )
-      |> decodeResult(~decode=SihlUsers.Model.User.t_decode);
+      |> decodeResult(~decode=Model.User.t_decode);
     };
   };
 
@@ -241,17 +263,11 @@ module User = {
   };
 
   module ResetPassword = {
-    [@decco]
-    type t = {
-      token: string,
-      newPassword: string,
-    };
-
     let f = (~token, ~newPassword) => {
       let body = {j|
        {
          "token": "$(token)",
-         "newPassword": "$(newPassword)"
+         "new_password": "$(newPassword)"
        }
        |j};
       Fetch.fetchWithInit(
@@ -270,16 +286,25 @@ module User = {
     [@decco]
     type t = {
       token: string,
+      [@decco.key "user_id"]
       userId: string,
     };
 
+    let encode: string => string = [%raw "btoa"];
+    let decode: string => string = [%raw "atob"];
+
     let f = (~email, ~password) => {
-      Fetch.fetch(
-        ClientConfig.baseUrl()
-        ++ "/users/login?email="
-        ++ email
-        ++ "&password="
-        ++ password,
+      let basicHeader = encode(email ++ ":" ++ password);
+      Fetch.fetchWithInit(
+        ClientConfig.baseUrl() ++ "/users/login/",
+        Fetch.RequestInit.make(
+          ~method_=Get,
+          ~headers=
+            Fetch.HeadersInit.make({
+              "authorization": "Basic " ++ basicHeader,
+            }),
+          (),
+        ),
       )
       |> decodeResult(~decode=t_decode);
     };
@@ -287,14 +312,12 @@ module User = {
 
   module Register = {
     [@decco]
-    let f = (~username, ~givenName, ~familyName, ~email, ~password) => {
+    let f = (~username, ~email, ~password) => {
       let body = {j|
        {
          "email": "$(email)",
          "username": "$(username)",
-         "password": "$(password)",
-         "givenName": "$(givenName)",
-         "familyName": "$(familyName)"
+         "password": "$(password)"
        }
        |j};
 

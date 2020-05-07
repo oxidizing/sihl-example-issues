@@ -1,5 +1,3 @@
-module Async = Sihl.Common.Async;
-
 module Board = ClientBoardPage;
 module Register = ClientRegisterPage;
 module Login = ClientLoginPage;

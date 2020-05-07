@@ -1,5 +1,3 @@
-module Async = Sihl.Common.Async;
-
 module Layout = ClientLayout;
 module Login = ClientLoginPage;
 
@@ -155,19 +153,21 @@ module AddBoard = {
           className="button is-info"
           onClick={event => {
             ReactEvent.Mouse.preventDefault(event);
-            {let boardId = Sihl.Common.Uuid.V4.uuidv4();
-             dispatch(Action.StartAddBoard(boardId, title));
-             let%Async result = ClientApi.Board.Add.f(~title);
-             Async.async(
-               switch (result) {
-               | Ok(board) =>
-                 setTitle(_ => "");
-                 dispatch(Action.SucceedAddBoard(boardId, board));
-               | Error(msg) =>
-                 setError(_ => Some("Failed create board: " ++ msg));
-                 dispatch(Action.FailAddBoard(boardId));
-               },
-             )}
+            {
+              let boardId = Random.generate();
+              dispatch(Action.StartAddBoard(boardId, title));
+              let%Async result = ClientApi.Board.Add.f(~title);
+              Async.async(
+                switch (result) {
+                | Ok(board) =>
+                  setTitle(_ => "");
+                  dispatch(Action.SucceedAddBoard(boardId, board));
+                | Error(msg) =>
+                  setError(_ => Some("Failed create board: " ++ msg));
+                  dispatch(Action.FailAddBoard(boardId));
+                },
+              );
+            }
             ->ignore;
           }}>
           {React.string("Add board")}
@@ -323,7 +323,7 @@ module Board = {
 
 module AddIssue = {
   let addIssue = (setError, dispatch, ~boardId, ~title, ~description) => {
-    let issueId = Sihl.Common.Uuid.V4.uuidv4();
+    let issueId = Random.generate();
     dispatch(Action.StartAddIssue(issueId, boardId, title, description));
     let%Async result = ClientApi.Issue.Add.f(~boardId, ~title, ~description);
     Async.async(
@@ -375,23 +375,25 @@ module AddIssue = {
         className="button is-info"
         onClick={event => {
           ReactEvent.Mouse.preventDefault(event);
-          let issueId = Sihl.Common.Uuid.V4.uuidv4();
+          let issueId = Random.generate();
           dispatch(
             Action.StartAddIssue(issueId, boardId, title, description),
           );
-          {let%Async result =
-             ClientApi.Issue.Add.f(~boardId, ~title, ~description);
-           Async.async(
-             switch (result) {
-             | Belt.Result.Ok(issue) =>
-               setTitle(_ => "");
-               setDescription(_ => None);
-               dispatch(SucceedAddIssue(issueId, issue));
-             | Belt.Result.Error(msg) =>
-               setError(_ => Some("Failed create issue: " ++ msg));
-               dispatch(Action.FailAddIssue(issueId));
-             },
-           )}
+          {
+            let%Async result =
+              ClientApi.Issue.Add.f(~boardId, ~title, ~description);
+            Async.async(
+              switch (result) {
+              | Belt.Result.Ok(issue) =>
+                setTitle(_ => "");
+                setDescription(_ => None);
+                dispatch(SucceedAddIssue(issueId, issue));
+              | Belt.Result.Error(msg) =>
+                setError(_ => Some("Failed create issue: " ++ msg));
+                dispatch(Action.FailAddIssue(issueId));
+              },
+            );
+          }
           ->ignore;
         }}>
         {React.string("Add Issue")}

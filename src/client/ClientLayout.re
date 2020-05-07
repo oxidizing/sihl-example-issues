@@ -1,5 +1,3 @@
-module Async = Sihl.Common.Async;
-
 module LoginRegister = {
   [@react.component]
   let make = () => {

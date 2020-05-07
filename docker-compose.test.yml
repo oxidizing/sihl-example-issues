@@ -1,16 +1,16 @@
 version: '3.7'
 services:
-  db:
-    image: mariadb:10.1.41-bionic
-    command: --max_allowed_packet=629145600
+  postgres:
+    image: postgres:12.2
+    restart: always
     environment:
-      # default user is "root"
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: dev
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dev
     ports:
-      - 3306:3306
+      - 5432:5432
 
   adminer:
-    image: adminer
+    image: adminer:4.7.6-standalone
     ports:
       - 8080:8080

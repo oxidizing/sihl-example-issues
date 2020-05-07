@@ -1,18 +1,13 @@
 {
   "name": "sihl-example-issues",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "reason": {
     "react-jsx": 3
   },
   "sources": [
     {
-      "dir" : "src",
+      "dir" : "src/client",
       "subdirs" : true
-    },
-    {
-      "dir": "__tests__",
-      "subdirs": true,
-      "type": "dev"
     }
   ],
   "package-specs": {
@@ -23,12 +18,9 @@
   "bs-dependencies": [
     "reason-react",
     "bs-fetch",
-    "@sihl/core",
-    "@sihl/users",
-    "@sihl/mysql",
     "decco"
   ],
-  "bs-dev-dependencies": ["@glennsl/bs-jest"],
+  "bs-dev-dependencies": [],
   "warnings": {
     "error" : "+101"
   },

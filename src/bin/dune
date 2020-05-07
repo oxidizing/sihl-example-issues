@@ -1,0 +1,4 @@
+(executable
+  (name Run)
+  (public_name Run)
+  (libraries base sihl_users sihl_example_issues))
