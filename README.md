@@ -2,7 +2,7 @@
 
 # Issue Management App
 
-This is a simple app in full-stack Reason that uses the web framework [Sihl](https://github.com/oxidizing/sihl/) with [ReasonReact](https://reasonml.github.io/reason-react/).
+This is a simple app that can be used to manage issues written in Fullstack Reason using the web framework [Sihl](https://github.com/oxidizing/sihl/) and [ReasonReact](https://reasonml.github.io/reason-react/).
 
 You can check out the live demo here: [https://sihl-example-issues.oxidizing.io/](https://sihl-example-issues.oxidizing.io/)
 
