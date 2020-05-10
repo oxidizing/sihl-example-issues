@@ -30,7 +30,8 @@ RUN opam config exec -- make
 FROM alpine:latest
 WORKDIR /app
 # TODO use opam depext |> file to automatically install all systems deps
-RUN apk --update add emacs-nox libffi-dev linux-headers m4 pcre-dev mariadb-dev postgresql-dev
+# This was defined by opam depext: RUN apk --update add emacs-nox libffi-dev linux-headers m4 pcre-dev mariadb-dev postgresql-dev
+RUN apk --update add pcre-dev postgresql-dev
 COPY --from=ocaml-builder /home/opam/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
 EXPOSE 3000
