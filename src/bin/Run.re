@@ -14,12 +14,8 @@ let config =
     ],
     ~production=[
       ("BASE_URL", "https://sihl-example-issues.oxidizing.io"),
-      ("EMAIL_BACKEND", "smtp"),
+      ("EMAIL_BACKEND", "sendgrid"),
       ("EMAIL_SENDER", "josef@oxidizing.io"),
-      ("SMTP_SECURE", "false"),
-      ("SMTP_HOST", "smtp.sendgrid.net"),
-      ("SMTP_PORT", "587"),
-      ("SMTP_AUTH_USERNAME", "apikey"),
     ],
   );
 

@@ -31,5 +31,5 @@ WORKDIR /app
 RUN apk --update add pcre-dev postgresql-dev
 COPY --from=ocaml-builder /home/opam/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
-EXPOSE 3000
+ENV SIHL_ENV production
 CMD ["./run.exe", "start"]
