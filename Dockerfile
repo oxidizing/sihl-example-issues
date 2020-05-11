@@ -32,4 +32,5 @@ RUN apt-get update -y && \
 COPY --from=ocaml-builder /home/opam/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
 ENV SIHL_ENV production
-CMD ["./run.exe", "start"]
+ENV SENDGRID_API_KEY ${SENDGRID_API_KEY}
+CMD ["sh", "-c", "/app/run.exe", "start"]
