@@ -16,9 +16,9 @@ RUN sudo chown -R opam .
 RUN opam remote remove --all default && \
         opam remote add default https://opam.ocaml.org
 RUN opam pin add -y -n sihl_example_issues . && \
-        opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.21 && \
-        opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.21 && \
-        opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.21
+        opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.22 && \
+        opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.22 && \
+        opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.22
 RUN opam depext -y sihl_example_issues
 RUN opam install --deps-only -y sihl_example_issues
 RUN opam config exec -- make
@@ -32,5 +32,4 @@ RUN apt-get update -y && \
 COPY --from=ocaml-builder /home/opam/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
 ENV SIHL_ENV production
-ENV SENDGRID_API_KEY ${SENDGRID_API_KEY}
-CMD ["sh", "-c", "/app/run.exe", "start"]
+CMD ["/app/run.exe", "start"]
