@@ -4,7 +4,7 @@
  (libraries
   base
   sihl_core
-  sihl_users
+  sihl_user
   )
  (preprocess
   (pps

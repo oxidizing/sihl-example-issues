@@ -21,17 +21,19 @@ jobs:
           name: Pin packages
           command: |
             opam pin add -y -n sihl_example_issues .
-      # TODO remove this once sihl_core is in OPAM
+      # TODO remove this once sihl is in OPAM
       - run:
-          name: Install sihl_core from Git repo
-          command: opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.20
-      # TODO remove this once sihl_users is in OPAM
-      - run:
-          name: Install sihl_users from Git repo
-          command: opam pin add -y -n sihl_users https://github.com/oxidizing/sihl.git\#0.0.20
+          name: Install sihl from Git repo
+          command: |
+            opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.21
+            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.21
+            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.21
       - run:
           name: Install system dependencies
-          command: opam depext -y sihl_example_issues
+          command: |
+            sudo apt-get update -y
+            sudo apt-get install -y libpq-dev
+            opam depext -y sihl_example_issues
       - run:
           name: Install OCaml dependencies
           command: opam install --deps-only -y sihl_example_issues
@@ -40,7 +42,6 @@ jobs:
           command: opam config exec -- make
       - run:
           name: Install OCaml test dependencies
-          # Not using opam install -y -t because it tries to run csv's tests
           command: opam install -y alcotest alcotest-lwt cohttp-lwt-unix
       - run:
           name: Test

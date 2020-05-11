@@ -9,7 +9,7 @@ module GetBoardsByUser = {
   let handler =
     Http.get("/issues/users/:id/boards/", req => {
       let user_id = Http.param(req, "id");
-      let user = Sihl_users.Middleware.Authn.authenticate(req);
+      let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* response = Service.Board.get_all_by_user(req, user, ~user_id);
       response
       |> body_out_to_yojson
@@ -27,7 +27,7 @@ module GetIssuesByBoard = {
   let handler =
     Http.get("/issues/boards/:id/issues/", req => {
       let board_id = Http.param(req, "id");
-      let user = Sihl_users.Middleware.Authn.authenticate(req);
+      let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* response = Service.Issue.get_all_by_board(req, user, ~board_id);
       response
       |> body_out_to_yojson
@@ -47,7 +47,7 @@ module AddBoard = {
 
   let handler =
     Http.post("/issues/boards/", req => {
-      let user = Sihl_users.Middleware.Authn.authenticate(req);
+      let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* {title} = Sihl_core.Http.require_body_exn(req, body_in_of_yojson);
       let* response = Service.Board.create(req, user, ~title);
       response
@@ -72,7 +72,7 @@ module AddIssue = {
 
   let handler =
     Http.post("/issues/issues/", req => {
-      let user = Sihl_users.Middleware.Authn.authenticate(req);
+      let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* {title, description, board: board_id} =
         Sihl_core.Http.require_body_exn(req, body_in_of_yojson);
       let* response =
@@ -93,7 +93,7 @@ module CompleteIssue = {
   let handler =
     Http.post("/issues/issues/:id/complete/", req => {
       let issue_id = Http.param(req, "id");
-      let user = Sihl_users.Middleware.Authn.authenticate(req);
+      let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* response = Service.Issue.complete(req, user, ~issue_id);
       response
       |> body_out_to_yojson

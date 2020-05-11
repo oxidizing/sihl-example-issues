@@ -8,11 +8,11 @@ let test_user_fetches_issues_of_board = (_, ()) => {
   let* () = Sihl_core.Manage.clean();
   let* (user, token) =
     Sihl_core.Test.seed @@
-    Sihl_users.Seed.logged_in_user(
+    Sihl_user.Seed.logged_in_user(
       ~email="foobar@example.com",
       ~password="123",
     );
-  let token = Sihl_users.Model.Token.value(token);
+  let token = Sihl_user.Model.Token.value(token);
   let headers =
     Cohttp.Header.of_list([("authorization", "Bearer " ++ token)]);
   let* board1 =
@@ -59,11 +59,11 @@ let test_user_creates_board = (_, ()) => {
   let* () = Sihl_core.Manage.clean();
   let* (user, token) =
     Sihl_core.Test.seed @@
-    Sihl_users.Seed.logged_in_user(
+    Sihl_user.Seed.logged_in_user(
       ~email="foobar@example.com",
       ~password="123",
     );
-  let token = Sihl_users.Model.Token.value(token);
+  let token = Sihl_user.Model.Token.value(token);
   let headers =
     Cohttp.Header.of_list([("authorization", "Bearer " ++ token)]);
   let body = {json|{"title": "Board title"}|json};
@@ -80,7 +80,7 @@ let test_user_creates_board = (_, ()) => {
     Cohttp_lwt_unix.Client.get(
       ~headers,
       Uri.of_string @@
-      url("/users/" ++ Sihl_users.Model.User.id(user) ++ "/boards/"),
+      url("/users/" ++ Sihl_user.Model.User.id(user) ++ "/boards/"),
     );
   let* body = Cohttp_lwt.Body.to_string(body);
   let boards =
@@ -96,7 +96,7 @@ let test_user_creates_issue_for_board = (_, ()) => {
   let* () = Sihl_core.Manage.clean();
   let* (user, token) =
     Sihl_core.Test.seed @@
-    Sihl_users.Seed.logged_in_user(
+    Sihl_user.Seed.logged_in_user(
       ~email="foobar@example.com",
       ~password="123",
     );
@@ -113,7 +113,7 @@ let test_user_creates_issue_for_board = (_, ()) => {
 }
 |json}
   ];
-  let token = Sihl_users.Model.Token.value(token);
+  let token = Sihl_user.Model.Token.value(token);
   let headers =
     Cohttp.Header.of_list([("authorization", "Bearer " ++ token)]);
   let* _ =
@@ -145,11 +145,11 @@ let test_user_completes_issue = (_, ()) => {
   let* () = Sihl_core.Manage.clean();
   let* (user, token) =
     Sihl_core.Test.seed @@
-    Sihl_users.Seed.logged_in_user(
+    Sihl_user.Seed.logged_in_user(
       ~email="foobar@example.com",
       ~password="123",
     );
-  let token = Sihl_users.Model.Token.value(token);
+  let token = Sihl_user.Model.Token.value(token);
   let headers =
     Cohttp.Header.of_list([("authorization", "Bearer " ++ token)]);
   let* board =

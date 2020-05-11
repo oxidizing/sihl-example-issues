@@ -46,6 +46,10 @@ let repositories = () => {
   [Repository.clean];
 };
 
-let bind = () => [];
+let bindings = () => [];
 
 let commands = () => [];
+
+let start = () => Ok();
+
+let stop = () => Ok();

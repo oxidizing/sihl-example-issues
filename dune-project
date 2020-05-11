@@ -2,7 +2,7 @@
 (generate_opam_files true)
 
 (name sihl_example_issues)
-(version 0.0.6)
+(version 0.0.7)
 
 (authors "Josef Erben")
 (license MIT)
@@ -26,11 +26,14 @@
   ;; Standard library replacement
   (base (>= v0.13.1))
 
-  ;; Core
-  (sihl_core (>= 0.0.19))
+  ;; Sihl
+  (sihl_core (>= 0.0.21))
+  (sihl_user (>= 0.0.21))
+  (sihl_email (>= 0.0.21))
 
-  ;; Apps
-  (sihl_users (>= 0.0.19))
+  ;; Database
+  (caqti-driver-postgresql (>= 1.2.1))
+  (ppx_rapper (>= 0.9.2))
 
   ;; Helpers & Generation
   (sexplib (>= 0.13.0))

@@ -27,7 +27,11 @@ let config =
 let project =
   Sihl_core.Run.Project.create(
     ~config,
-    [(module Sihl_users.App), (module Sihl_example_issues.App)],
+    [
+      (module Sihl_email.App),
+      (module Sihl_user.App),
+      (module Sihl_example_issues.App),
+    ],
   );
 
 let () = Sihl_core.Run.Project.run_command(project);
