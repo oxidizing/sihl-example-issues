@@ -24,7 +24,7 @@ You can check out the live demo here: [https://sihl-example-issues.oxidizing.io/
 - Optimistic rendering with error handling
 - Unit tests with jest thanks to testable business logic with reducers
 
-This project uses the [@sihl/users](https://www.npmjs.com/package/@sihl/users) app for user management.
+This project uses the [sihl_email](https://github.com/oxidizing/sihl/tree/master/sihl_email) and [sihl_user](https://github.com/oxidizing/sihl/tree/master/sihl_user) apps for user and email management.
 
 ## Getting started
 
