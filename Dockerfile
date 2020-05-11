@@ -8,7 +8,7 @@ RUN yarn
 RUN yarn build
 
 # Build the Sihl backend in a OPAM/OCaml container
-FROM ocaml/opam2:debian-10 AS ocaml-builder
+FROM ocaml/opam2:4.08 AS ocaml-builder
 WORKDIR /home/opam/app
 COPY sihl_example_issues.opam Makefile dune-project ./
 COPY src src
