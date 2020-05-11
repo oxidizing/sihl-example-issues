@@ -8,7 +8,7 @@ RUN yarn
 RUN yarn build
 
 # Build the Sihl backend in a OPAM/OCaml container
-FROM ocaml/opam2:alpine-3.10 AS ocaml-builder
+FROM ocaml/opam2:debian-10 AS ocaml-builder
 WORKDIR /home/opam/app
 COPY sihl_example_issues.opam Makefile dune-project ./
 COPY src src
@@ -24,10 +24,11 @@ RUN opam install --deps-only -y sihl_example_issues
 RUN opam config exec -- make
 
 # Copy over the binaries from stage 1 and 2 and install systems dependencies
-FROM alpine:latest
+FROM debian:buster-slim
 WORKDIR /app
 # TODO use opam depext |> file to automatically install all systems deps
-RUN apk --update add emacs-nox libffi-dev linux-headers m4 pcre-dev postgresql-dev pkgconf
+RUN apt-get update -y && \
+        apt-get install -qq -yy emacs-nox libffi-dev libpcre3-dev libpq-dev m4 pkg-config
 COPY --from=ocaml-builder /home/opam/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
 ENV SIHL_ENV production

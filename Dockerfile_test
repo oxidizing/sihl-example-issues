@@ -1,0 +1,8 @@
+FROM debian:bullseye-slim
+WORKDIR /app
+RUN apt update -y && \
+        apt install -y libpq-dev libpcre3
+COPY _build/default/src/bin/Run.exe run.exe
+COPY dist static
+ENV SIHL_ENV production
+CMD ["./run.exe", "start"]
