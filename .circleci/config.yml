@@ -13,9 +13,10 @@ jobs:
           name: build
           command: yarn build
       - persist_to_workspace:
-          root: dist
+          root: .
           paths:
-            - ./
+            - dist
+            - Dockerfile
   build-backend:
     docker:
       - image: ocaml/opam2:4.08
@@ -27,13 +28,6 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: dev
     steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Check workspace content
-          command: |
-            ls -a /tmp/workspace
-            ls -a /tmp/workspace/dist
       - run:
           name: Update opam
           command: |
@@ -66,6 +60,40 @@ jobs:
       - run:
           name: Test
           command: opam config exec -- make test
+      - persist_to_workspace:
+          root: _build/default/src
+          paths:
+            - bin
+  deploy:
+    docker:
+      - image: debian:buster
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Install git
+          command: |
+            sudo apt-get update -y
+            sudo apt-get install git
+      - run:
+          name: Check workspace content
+          command: |
+            ls -a /tmp/workspace
+      - run:
+          name: Prepare git repo for deployment
+          command: |
+            mkdir deploy
+            cd deploy
+            mv /tmp/workspace/Dockerfile .
+            mv /tmp/workspace/bin/Run.exe run.exe
+            mv /tmp/workspace/dist static
+            git init .
+      - run:
+          name: Deploy
+          command: |
+            git remote add dokku dokku@46.101.225.189:sihl-example-issues
+            git commit -am "Dokku deploy"
+            git push -f dokku master
 
 workflows:
   version: 2
@@ -73,7 +101,7 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - deploy
-        requires:
-          - build-frontend
-          - build-backend
+      - deploy:
+          requires:
+            - build-frontend
+            - build-backend

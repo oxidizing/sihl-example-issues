@@ -9,27 +9,28 @@ RUN yarn build
 
 # Build the Sihl backend in a OPAM/OCaml container
 FROM ocaml/opam2:4.08 AS ocaml-builder
-WORKDIR /home/opam/app
-COPY sihl_example_issues.opam Makefile dune-project ./
+WORKDIR app
+COPY sihl_example_issues.opam .
+
+RUN opam pin add -yn sihl_core https://github.com/oxidizing/sihl.git\#0.0.23 && \
+        opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.23 && \
+        opam pin add -yn sihl_user https://github.com/oxidizing/sihl.git\#0.0.23 && \
+        opam pin add -yn sihl_example_issues . && \
+        opam depext -y sihl_example_issues && \
+        opam install --deps-only sihl_example_issues
+
+COPY Makefile .
 COPY src src
-RUN sudo chown -R opam .
-RUN opam remote remove --all default && \
-        opam remote add default https://opam.ocaml.org
-RUN opam pin add -y -n sihl_example_issues . && \
-        opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.23 && \
-        opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.23 && \
-        opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.23
-RUN opam depext -y sihl_example_issues
-RUN opam install --deps-only -y sihl_example_issues
-RUN opam config exec -- make
+RUN sudo chown -R opam:nogroup . && \
+        opam config exec -- make
 
 # Copy over the binaries from stage 1 and 2 and install systems dependencies
-FROM debian:buster-slim
+FROM debian:10-slim
 WORKDIR /app
-# TODO use opam depext |> file to automatically install all systems deps
+# TODO use output of previous opam depext to automatically fetch correct system deps
 RUN apt-get update -y && \
-        apt-get install -qq -yy emacs-nox libffi-dev libpcre3-dev libpq-dev m4 pkg-config
-COPY --from=ocaml-builder /home/opam/app/_build/default/src/bin/Run.exe run.exe
+        apt-get install -qq -yy libpcre3-dev libpq-dev
+COPY --from=ocaml-builder /home/opam/opam-repository/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
 ENV SIHL_ENV production
 CMD ["/app/run.exe", "start"]
