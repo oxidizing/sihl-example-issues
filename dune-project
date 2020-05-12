@@ -2,7 +2,7 @@
 (generate_opam_files true)
 
 (name sihl_example_issues)
-(version 0.0.7)
+(version 0.0.8)
 
 (authors "Josef Erben")
 (license MIT)

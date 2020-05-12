@@ -89,7 +89,6 @@ workflows:
             - build-frontend
             - build-backend
           filters:
-            tags:
-              only: /.*/
             branches:
-              ignore: /.*/
+              only:
+                - master
