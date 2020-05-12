@@ -1,5 +1,4 @@
 version: 2.1
-working_directory: /tmp
 jobs:
   build-frontend:
     docker:
@@ -12,11 +11,6 @@ jobs:
       - run:
           name: build
           command: yarn build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - dist
-            - Dockerfile
   build-backend:
     docker:
       - image: ocaml/opam2:4.08
@@ -38,11 +32,11 @@ jobs:
           name: Pin packages
           command: |
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.23
+            opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.24
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.23
+            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.24
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.23
+            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.24
             opam pin add -y -n sihl_example_issues .
       - run:
           name: Install system dependencies
@@ -60,39 +54,19 @@ jobs:
       - run:
           name: Test
           command: opam config exec -- make test
-      - persist_to_workspace:
-          root: _build/default/src
-          paths:
-            - bin
   deploy:
     docker:
       - image: debian:buster
     steps:
-      - attach_workspace:
-          at: /tmp/workspace
+      - checkout
       - run:
           name: Install git
           command: |
             sudo apt-get update -y
             sudo apt-get install git
       - run:
-          name: Check workspace content
-          command: |
-            ls -a /tmp/workspace
-      - run:
-          name: Prepare git repo for deployment
-          command: |
-            mkdir deploy
-            cd deploy
-            mv /tmp/workspace/Dockerfile .
-            mv /tmp/workspace/bin/Run.exe run.exe
-            mv /tmp/workspace/dist static
-            git init .
-      - run:
           name: Deploy
           command: |
-            git remote add dokku dokku@46.101.225.189:sihl-example-issues
-            git commit -am "Dokku deploy"
             git push -f dokku master
 
 workflows:

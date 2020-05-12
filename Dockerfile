@@ -12,9 +12,9 @@ FROM ocaml/opam2:4.08 AS ocaml-builder
 WORKDIR app
 COPY sihl_example_issues.opam .
 
-RUN opam pin add -yn sihl_core https://github.com/oxidizing/sihl.git\#0.0.23 && \
-        opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.23 && \
-        opam pin add -yn sihl_user https://github.com/oxidizing/sihl.git\#0.0.23 && \
+RUN opam pin add -yn sihl_core https://github.com/oxidizing/sihl.git\#0.0.24 && \
+        opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.24 && \
+        opam pin add -yn sihl_user https://github.com/oxidizing/sihl.git\#0.0.24 && \
         opam pin add -yn sihl_example_issues . && \
         opam depext -y sihl_example_issues && \
         opam install --deps-only sihl_example_issues
@@ -32,7 +32,7 @@ RUN apt-get update -y && \
         apt-get install -qq -yy libpcre3-dev libpq-dev
 # WTF: https://github.com/mirage/ocaml-cohttp/issues/675
 RUN echo "http		80/tcp		www		# WorldWideWeb HTTP" >> /etc/services
-RUN echo "http          443/tcp		www		# WorldWideWeb HTTPS" >> /etc/services
+RUN echo "https          443/tcp	www		# WorldWideWeb HTTPS" >> /etc/services
 COPY --from=ocaml-builder /home/opam/opam-repository/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
 ENV SIHL_ENV production
