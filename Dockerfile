@@ -12,9 +12,9 @@ FROM ocaml/opam2:4.08 AS ocaml-builder
 WORKDIR app
 COPY sihl_example_issues.opam .
 
-RUN opam pin add -yn sihl_core https://github.com/oxidizing/sihl.git\#0.0.25 && \
-        opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.25 && \
-        opam pin add -yn sihl_user https://github.com/oxidizing/sihl.git\#0.0.25 && \
+RUN opam pin add -yn sihl_core https://github.com/oxidizing/sihl.git\#0.0.26 && \
+        opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.26 && \
+        opam pin add -yn sihl_user https://github.com/oxidizing/sihl.git\#0.0.26 && \
         opam pin add -yn sihl_example_issues . && \
         opam depext -y sihl_example_issues && \
         opam install --deps-only sihl_example_issues

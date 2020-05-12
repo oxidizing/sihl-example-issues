@@ -27,9 +27,9 @@
   (base (>= v0.13.1))
 
   ;; Sihl
-  (sihl_core (>= 0.0.25))
-  (sihl_user (>= 0.0.25))
-  (sihl_email (>= 0.0.25))
+  (sihl_core (>= 0.0.26))
+  (sihl_user (>= 0.0.26))
+  (sihl_email (>= 0.0.26))
 
   ;; Database
   (caqti-driver-postgresql (>= 1.2.1))
