@@ -16,9 +16,9 @@ RUN sudo chown -R opam .
 RUN opam remote remove --all default && \
         opam remote add default https://opam.ocaml.org
 RUN opam pin add -y -n sihl_example_issues . && \
-        opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.22 && \
-        opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.22 && \
-        opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.22
+        opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.23 && \
+        opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.23 && \
+        opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.23
 RUN opam depext -y sihl_example_issues
 RUN opam install --deps-only -y sihl_example_issues
 RUN opam config exec -- make
