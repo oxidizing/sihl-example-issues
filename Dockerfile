@@ -30,6 +30,9 @@ WORKDIR /app
 # TODO use output of previous opam depext to automatically fetch correct system deps
 RUN apt-get update -y && \
         apt-get install -qq -yy libpcre3-dev libpq-dev
+# WTF: https://github.com/mirage/ocaml-cohttp/issues/675
+RUN echo "http		80/tcp		www		# WorldWideWeb HTTP" >> /etc/services
+RUN echo "http          443/tcp		www		# WorldWideWeb HTTPS" >> /etc/services
 COPY --from=ocaml-builder /home/opam/opam-repository/app/_build/default/src/bin/Run.exe run.exe
 COPY --from=js-builder /home/sihl/app/dist static
 ENV SIHL_ENV production
