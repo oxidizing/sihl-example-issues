@@ -32,11 +32,11 @@ jobs:
           name: Pin packages
           command: |
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.26
+            opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.27
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.26
+            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.27
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.26
+            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.27
             opam pin add -y -n sihl_example_issues .
       - run:
           name: Install system dependencies
