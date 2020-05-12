@@ -85,9 +85,11 @@ workflows:
       - build-frontend
       - build-backend
       - deploy:
-          filters:
-            tags:
-              only: /.*/
           requires:
             - build-frontend
             - build-backend
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
