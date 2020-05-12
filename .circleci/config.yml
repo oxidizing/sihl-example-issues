@@ -60,13 +60,22 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Add SSH host
+          command: |
+            mkdir -p ~/.ssh
+            echo "88.198.48.243 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0oq45ku/Xo14ow1jry+eo/qVHOKVXRQfQCIAVnco2Wwy0TlZf/SYAK3jIRdm3/5a9DbEcqM28ISZ3ZX+0v6ov0hmmHdx8pdx3AlRvgHOpjcpqvCIIM1rU4ZnXb9LAd9ICx49O26Ns5kYEsNVSWVdCKVt3rMM9BO0Oe0OClRKPkr/D69HU7Jhu7ZacmmWoTrcABQthVSt/0AYyLKxc9BtmL0dS2zCCbiSJD9CeEcScK1FVzBJacbyx5mVEypp6wjbNNKAR5AThMkSH7tXnrSnSkguJfKjoy4M79RhtRtuOrDOGQmIwA6GzqdMrcBSj0ACCO1LmB83BXhi0QfpzGTwX" >> ~/.ssh/known_hosts
+      - add_ssh_keys:
+          fingerprints:
+            - "23:77:b3:08:3c:5f:4c:6c:8c:35:11:be:2d:de:ed:00"
+      - run:
           name: Install git
           command: |
-            sudo apt-get update -y
-            sudo apt-get install git
+            apt-get update -y
+            apt-get install -y git
       - run:
           name: Deploy
           command: |
+            git remote add dokku dokku@88.198.48.243:sihl-example-issues
             git push -f dokku master
 
 workflows:
@@ -76,6 +85,9 @@ workflows:
       - build-frontend
       - build-backend
       - deploy:
+          filters:
+            tags:
+              only: /.*/
           requires:
             - build-frontend
             - build-backend
