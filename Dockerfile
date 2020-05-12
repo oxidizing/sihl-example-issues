@@ -11,6 +11,7 @@ RUN yarn build
 FROM ocaml/opam2:4.08 AS ocaml-builder
 WORKDIR app
 COPY sihl_example_issues.opam .
+COPY dune-project .
 
 RUN opam pin add -yn sihl_core https://github.com/oxidizing/sihl.git\#0.0.26 && \
         opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.26 && \
@@ -29,7 +30,7 @@ FROM debian:10-slim
 WORKDIR /app
 # TODO use output of previous opam depext to automatically fetch correct system deps
 RUN apt-get update -y && \
-        apt-get install -qq -yy libpcre3-dev libpq-dev
+        apt-get install -qq -yy emacs-nox libffi-dev libgmp-dev libpcre3-dev libpq-dev libssl-dev m4 perl pkg-config
 # WTF: https://github.com/mirage/ocaml-cohttp/issues/675
 RUN echo "http		80/tcp		www		# WorldWideWeb HTTP" >> /etc/services
 RUN echo "https          443/tcp	www		# WorldWideWeb HTTPS" >> /etc/services
