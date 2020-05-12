@@ -1,5 +1,21 @@
 version: 2.1
+working_directory: /tmp
 jobs:
+  build-frontend:
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+      - run:
+          name: yarn
+          command: yarn
+      - run:
+          name: build
+          command: yarn build
+      - persist_to_workspace:
+          root: dist
+          paths:
+            - ./
   build-backend:
     docker:
       - image: ocaml/opam2:4.08
@@ -11,6 +27,13 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: dev
     steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Check workspace content
+          command: |
+            ls -a /tmp/workspace
+            ls -a /tmp/workspace/dist
       - run:
           name: Update opam
           command: |
@@ -43,25 +66,14 @@ jobs:
       - run:
           name: Test
           command: opam config exec -- make test
-  build-frontend:
-    docker:
-      - image: circleci/node:10.16.3
-    steps:
-      - checkout
-      - run:
-          name: yarn
-          command: yarn
-      - run:
-          name: build
-          command: yarn build
-  deploy:
-    steps:
-      - checkout
-      - run
 
 workflows:
   version: 2
   build:
     jobs:
-      - build-backend
       - build-frontend
+      - build-backend
+      - deploy
+        requires:
+          - build-frontend
+          - build-backend
