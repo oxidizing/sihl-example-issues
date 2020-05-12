@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  backend:
+  build-backend:
     docker:
       - image: ocaml/opam2:4.08
         environment:
@@ -20,19 +20,16 @@ jobs:
       - run:
           name: Pin packages
           command: |
-            opam pin add -y -n sihl_example_issues .
-      # TODO remove this once sihl is in OPAM
-      - run:
-          name: Install sihl from Git repo
-          command: |
+            # TODO remove this once sihl is in OPAM
             opam pin add -y -n sihl_core https://github.com/oxidizing/sihl.git\#0.0.23
+            # TODO remove this once sihl is in OPAM
             opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.23
+            # TODO remove this once sihl is in OPAM
             opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.23
+            opam pin add -y -n sihl_example_issues .
       - run:
           name: Install system dependencies
           command: |
-            sudo apt-get update -y
-            sudo apt-get install -y libpq-dev
             opam depext -y sihl_example_issues
       - run:
           name: Install OCaml dependencies
@@ -46,7 +43,7 @@ jobs:
       - run:
           name: Test
           command: opam config exec -- make test
-  frontend:
+  build-frontend:
     docker:
       - image: circleci/node:10.16.3
     steps:
@@ -57,10 +54,14 @@ jobs:
       - run:
           name: build
           command: yarn build
+  deploy:
+    steps:
+      - checkout
+      - run
 
 workflows:
   version: 2
   build:
     jobs:
-      - backend
-      - frontend
+      - build-backend
+      - build-frontend
