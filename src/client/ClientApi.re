@@ -234,7 +234,7 @@ module User = {
   module ConfirmEmail = {
     let f = (~token) => {
       Fetch.fetch(
-        ClientConfig.baseUrl() ++ "/users/confirm-email?token=" ++ token,
+        ClientConfig.baseUrl() ++ "/users/confirm-email/?token=" ++ token,
       )
       |> toResult;
     };
@@ -251,7 +251,7 @@ module User = {
        }
        |j};
       Fetch.fetchWithInit(
-        ClientConfig.baseUrl() ++ "/users/request-password-reset",
+        ClientConfig.baseUrl() ++ "/users/request-password-reset/",
         Fetch.RequestInit.make(
           ~method_=Post,
           ~body=Fetch.BodyInit.make(body),
@@ -271,7 +271,7 @@ module User = {
        }
        |j};
       Fetch.fetchWithInit(
-        ClientConfig.baseUrl() ++ "/users/reset-password",
+        ClientConfig.baseUrl() ++ "/users/reset-password/",
         Fetch.RequestInit.make(
           ~method_=Post,
           ~body=Fetch.BodyInit.make(body),

@@ -104,8 +104,17 @@ module CompleteIssue = {
 };
 
 module Client = {
-  let handler =
+  let app_handler =
     Opium.App.get("/app/**", _ => {
+      let dir =
+        Sihl_core.Config.read_string(~default="./static", "STATIC_FILES_DIR");
+      let* resp =
+        Cohttp_lwt_unix.Server.respond_file(~fname=dir ++ "/index.html", ());
+      Lwt.return @@ Opium.Std.Response.of_response_body(resp);
+    });
+
+  let root_handler =
+    Opium.App.get("/", _ => {
       let dir =
         Sihl_core.Config.read_string(~default="./static", "STATIC_FILES_DIR");
       let* resp =

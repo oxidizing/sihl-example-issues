@@ -19,15 +19,6 @@ let config = () =>
 
 let middlewares = () =>
   Handler.[
-    Opium.Std.(
-      middleware(
-        Middleware.static(
-          ~local_path="../../../../dist/",
-          ~uri_prefix="/assets",
-          (),
-        ),
-      )
-    ),
     GetBoardsByUser.handler,
     GetIssuesByBoard.handler,
     AddBoard.handler,
@@ -35,7 +26,8 @@ let middlewares = () =>
     CompleteIssue.handler,
     AdminUi.Issues.handler,
     AdminUi.Boards.handler,
-    Client.handler,
+    Client.app_handler,
+    Client.root_handler,
   ];
 
 let migrations = () => {
