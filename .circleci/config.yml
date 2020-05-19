@@ -57,7 +57,7 @@ jobs:
           name: Build
           command: opam config exec -- make
       - save_cache:
-          key: opam
+          key: opam-{{ checksum "dune-project" }}
           paths:
             - ~/.opam
       - run:
