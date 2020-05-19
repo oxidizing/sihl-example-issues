@@ -56,6 +56,10 @@ jobs:
       - run:
           name: Build
           command: opam config exec -- make
+      - save_cache:
+          key: opam
+          paths:
+            - ~/.opam
       - run:
           name: Install OCaml test dependencies
           command: opam install -y alcotest alcotest-lwt cohttp-lwt-unix
