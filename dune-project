@@ -2,7 +2,7 @@
 (generate_opam_files true)
 
 (name sihl_example_issues)
-(version 0.0.8)
+(version 0.0.9)
 
 (authors "Josef Erben")
 (license MIT)
@@ -27,9 +27,12 @@
   (base (>= v0.13.1))
 
   ;; Sihl
-  (sihl_core (>= 0.0.27))
-  (sihl_user (>= 0.0.27))
-  (sihl_email (>= 0.0.27))
+  (sihl (>= 0.0.28))
+  (sihl_repo_postgresql (>= 0.0.28))
+  (sihl_email (>= 0.0.28))
+  (sihl_email_repo_postgresql (>= 0.0.28))
+  (sihl_user (>= 0.0.28))
+  (sihl_user_repo_postgresql (>= 0.0.28))
 
   ;; Database
   (caqti-driver-postgresql (>= 1.2.1))

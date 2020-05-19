@@ -33,9 +33,9 @@ let suite = [
 let () =
   Lwt_main.run(
     {
-      let* () = Sihl_core.Manage.start(Run.project);
-      let* () = Sihl_core.Manage.migrate();
+      let* () = Sihl.Run.Manage.start(Run.project);
+      let* () = Sihl.Run.Manage.migrate();
       let* () = run("issue management app", suite);
-      Sihl_core.Manage.stop();
+      Sihl.Run.Manage.stop();
     },
   );

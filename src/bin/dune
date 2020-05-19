@@ -1,4 +1,14 @@
 (executable
   (name Run)
   (public_name Run)
-  (libraries base sihl_user sihl_example_issues caqti-driver-postgresql))
+  (libraries
+   base
+   sihl
+   sihl_repo_postgresql
+   sihl_email
+   sihl_email_repo_postgresql
+   sihl_user
+   sihl_user_repo_postgresql
+   sihl_example_issues
+   caqti-driver-postgresql
+   ))

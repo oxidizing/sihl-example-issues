@@ -3,7 +3,7 @@ let name = "Issue Management App";
 let namespace = "issues";
 
 let config = () =>
-  Sihl_core.Config.Schema.[
+  Sihl.Core.Config.Schema.[
     string_(
       ~default="console",
       ~choices=["smtp", "console", "memory"],
@@ -17,7 +17,7 @@ let config = () =>
     bool_(~default=false, "SMTP_POOL"),
   ];
 
-let middlewares = () =>
+let endpoints = () =>
   Handler.[
     GetBoardsByUser.handler,
     GetIssuesByBoard.handler,
@@ -30,12 +30,8 @@ let middlewares = () =>
     Client.root_handler,
   ];
 
-let migrations = () => {
-  Migration.migration();
-};
-
-let repositories = () => {
-  [Repository.clean];
+let repos = () => {
+  [((module Repository): (module Sihl.Core.Contract.REPOSITORY))];
 };
 
 let bindings = () => [];

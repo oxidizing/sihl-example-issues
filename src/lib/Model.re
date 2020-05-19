@@ -11,7 +11,7 @@ module Issue = {
   };
 
   let make = (~title, ~description, ~board) => {
-    id: Sihl_core.Random.uuidv4(),
+    id: Sihl.Core.Random.uuidv4(),
     title,
     description,
     board,
@@ -43,7 +43,7 @@ module Board = {
   };
 
   let make = (~title, ~owner) => {
-    id: Sihl_core.Random.uuidv4(),
+    id: Sihl.Core.Random.uuidv4(),
     title,
     owner,
     status: "active",

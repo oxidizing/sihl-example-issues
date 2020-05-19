@@ -1,7 +1,7 @@
 // TODO remove this and use project definition from Project.re
 
 let config =
-  Sihl_core.Config.Setting.create(
+  Sihl.Core.Config.Setting.create(
     ~development=[
       ("BASE_URL", "http://localhost:3000"),
       ("EMAIL_SENDER", "josef@oxidizing.io"),
@@ -24,9 +24,36 @@ let config =
     ],
   );
 
+let middlewares = [
+  Sihl.Middleware.cookie,
+  Sihl.Middleware.static,
+  Sihl.Middleware.flash,
+  Sihl.Middleware.error,
+  Sihl.Middleware.db,
+  Sihl_user.Middleware.Authn.token,
+  Sihl_user.Middleware.Authn.session,
+];
+
+let bindings = [
+  Sihl.Core.Registry.bind(
+    Sihl.Core.Contract.Migration.repository,
+    (module Sihl_repo_postgresql.Repo),
+  ),
+  Sihl.Core.Registry.bind(
+    Sihl_email.Bind.Repository.key,
+    (module Sihl_email_repo_postgresql.Repo),
+  ),
+  Sihl.Core.Registry.bind(
+    Sihl_user.Binding.Repository.key,
+    (module Sihl_user_repo_postgresql.Repo),
+  ),
+];
+
 let project =
-  Sihl_core.Run.Project.create(
+  Sihl.Run.Project.Project.create(
     ~config,
+    ~bindings,
+    middlewares,
     [
       (module Sihl_email.App),
       (module Sihl_user.App),
@@ -34,4 +61,4 @@ let project =
     ],
   );
 
-let () = Sihl_core.Run.Project.run_command(project);
+let () = Sihl.Run.Project.Project.run_command(project);

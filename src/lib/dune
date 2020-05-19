@@ -3,8 +3,11 @@
  (public_name sihl_example_issues)
  (libraries
   base
-  sihl_core
-  sihl_user
+   sihl
+   sihl_email
+   sihl_email_repo_postgresql
+   sihl_user
+   sihl_user_repo_postgresql
   )
  (preprocess
   (pps
