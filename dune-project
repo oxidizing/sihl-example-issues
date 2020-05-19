@@ -27,12 +27,12 @@
   (base (>= v0.13.1))
 
   ;; Sihl
-  (sihl (>= 0.0.28))
-  (sihl_repo_postgresql (>= 0.0.28))
-  (sihl_email (>= 0.0.28))
-  (sihl_email_repo_postgresql (>= 0.0.28))
-  (sihl_user (>= 0.0.28))
-  (sihl_user_repo_postgresql (>= 0.0.28))
+  (sihl (>= 0.0.29))
+  (sihl_repo_postgresql (>= 0.0.29))
+  (sihl_email (>= 0.0.29))
+  (sihl_email_repo_postgresql (>= 0.0.29))
+  (sihl_user (>= 0.0.29))
+  (sihl_user_repo_postgresql (>= 0.0.29))
 
   ;; Database
   (caqti-driver-postgresql (>= 1.2.1))

@@ -32,12 +32,12 @@ jobs:
           name: Pin sihl packages
           command: |
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl https://github.com/oxidizing/sihl.git\#0.0.28
-            opam pin add -y -n sihl_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.28
-            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.28
-            opam pin add -y -n sihl_email_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.28
-            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.28
-            opam pin add -y -n sihl_user_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.28
+            opam pin add -y -n sihl https://github.com/oxidizing/sihl.git\#0.0.29
+            opam pin add -y -n sihl_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.29
+            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.29
+            opam pin add -y -n sihl_email_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.29
+            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.29
+            opam pin add -y -n sihl_user_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.29
       - run:
           name: Pin packages
           command: |
@@ -46,20 +46,12 @@ jobs:
           name: Install system dependencies
           command: |
             opam depext -y sihl_example_issues
-      - restore_cache:
-         keys:
-           - opam-{{ checksum "dune-project" }}
-           - opam # used if checksum fails
       - run:
           name: Install OCaml dependencies
           command: opam install --deps-only -y sihl_example_issues
       - run:
           name: Build
           command: opam config exec -- make
-      - save_cache:
-          key: opam-{{ checksum "dune-project" }}
-          paths:
-            - ~/.opam
       - run:
           name: Install OCaml test dependencies
           command: opam install -y alcotest alcotest-lwt cohttp-lwt-unix
