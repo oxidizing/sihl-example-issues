@@ -46,6 +46,10 @@ jobs:
           name: Install system dependencies
           command: |
             opam depext -y sihl_example_issues
+      - restore_cache:
+         keys:
+           - opam-{{ checksum "dune-project" }}
+           - opam # used if checksum fails
       - run:
           name: Install OCaml dependencies
           command: opam install --deps-only -y sihl_example_issues
