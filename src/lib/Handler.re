@@ -8,13 +8,13 @@ module GetBoardsByUser = {
 
   let handler =
     get("/issues/users/:id/boards/", req => {
-      let user_id = param(req, "id");
-      let user = Sihl_user.Middleware.Authn.authenticate(req);
+      let user_id = Req.param(req, "id");
+      let user = Sihl.Authn.authenticate(req);
       let* response = Service.Board.get_all_by_user(req, user, ~user_id);
       response
       |> body_out_to_yojson
       |> Yojson.Safe.to_string
-      |> Response.json
+      |> Res.json
       |> Lwt.return;
     });
 };
@@ -26,13 +26,13 @@ module GetIssuesByBoard = {
 
   let handler =
     get("/issues/boards/:id/issues/", req => {
-      let board_id = param(req, "id");
+      let board_id = Req.param(req, "id");
       let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* response = Service.Issue.get_all_by_board(req, user, ~board_id);
       response
       |> body_out_to_yojson
       |> Yojson.Safe.to_string
-      |> Response.json
+      |> Res.json
       |> Lwt.return;
     });
 };
@@ -48,12 +48,12 @@ module AddBoard = {
   let handler =
     post("/issues/boards/", req => {
       let user = Sihl_user.Middleware.Authn.authenticate(req);
-      let* {title} = require_body_exn(req, body_in_of_yojson);
+      let* {title} = Req.require_body_exn(req, body_in_of_yojson);
       let* response = Service.Board.create(req, user, ~title);
       response
       |> body_out_to_yojson
       |> Yojson.Safe.to_string
-      |> Response.json
+      |> Res.json
       |> Lwt.return;
     });
 };
@@ -74,13 +74,13 @@ module AddIssue = {
     post("/issues/issues/", req => {
       let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* {title, description, board: board_id} =
-        require_body_exn(req, body_in_of_yojson);
+        Req.require_body_exn(req, body_in_of_yojson);
       let* response =
         Service.Issue.create(req, user, ~title, ~description, ~board_id);
       response
       |> body_out_to_yojson
       |> Yojson.Safe.to_string
-      |> Response.json
+      |> Res.json
       |> Lwt.return;
     });
 };
@@ -92,13 +92,13 @@ module CompleteIssue = {
 
   let handler =
     post("/issues/issues/:id/complete/", req => {
-      let issue_id = param(req, "id");
+      let issue_id = Req.param(req, "id");
       let user = Sihl_user.Middleware.Authn.authenticate(req);
       let* response = Service.Issue.complete(req, user, ~issue_id);
       response
       |> body_out_to_yojson
       |> Yojson.Safe.to_string
-      |> Response.json
+      |> Res.json
       |> Lwt.return;
     });
 };
@@ -126,7 +126,7 @@ module Client = {
 module AdminUi = {
   module Issues = {
     open Sihl.Http;
-    let handler = get("", _ => Response.empty |> Lwt.return);
+    let handler = get("", _ => Res.empty |> Lwt.return);
     /* let endpoint = (root, database) => */
     /*   Sihl.App.Http.dbEndpoint({ */
     /*     database, */
@@ -147,7 +147,7 @@ module AdminUi = {
 
   module Boards = {
     open Sihl.Http;
-    let handler = get("", _ => Response.empty |> Lwt.return);
+    let handler = get("", _ => Res.empty |> Lwt.return);
     /* let endpoint = (root, database) => */
     /*   Sihl.App.Http.dbEndpoint({ */
     /*     database, */

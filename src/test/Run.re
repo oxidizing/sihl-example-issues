@@ -11,28 +11,21 @@ let config =
   );
 
 let middlewares = [
+  Sihl.Middleware.db,
   Sihl.Middleware.cookie,
   Sihl.Middleware.static,
+  Sihl_session.middleware,
   Sihl.Middleware.flash,
   Sihl.Middleware.error,
-  Sihl.Middleware.db,
   Sihl_user.Middleware.Authn.token,
   Sihl_user.Middleware.Authn.session,
 ];
 
 let bindings = [
-  Sihl.Core.Registry.bind(
-    Sihl.Core.Contract.Migration.repository,
-    (module Sihl_repo_postgresql.Repo),
-  ),
-  Sihl.Core.Registry.bind(
-    Sihl_email.Bind.Repository.key,
-    (module Sihl_email_repo_postgresql.Repo),
-  ),
-  Sihl.Core.Registry.bind(
-    Sihl_user.Binding.Repository.key,
-    (module Sihl_user_repo_postgresql.Repo),
-  ),
+  Sihl_postgresql.bind,
+  Sihl_session_postgresql.bind,
+  Sihl_email_postgresql.bind,
+  Sihl_user_postgresql.bind,
 ];
 
 let project =
@@ -41,6 +34,8 @@ let project =
     ~bindings,
     middlewares,
     [
+      (module Sihl_admin.App),
+      (module Sihl_session.App),
       (module Sihl_email.App),
       (module Sihl_user.App),
       (module Sihl_example_issues.App),

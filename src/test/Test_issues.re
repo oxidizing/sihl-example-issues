@@ -79,8 +79,7 @@ let test_user_creates_board = (_, ()) => {
   let* (_, body) =
     Cohttp_lwt_unix.Client.get(
       ~headers,
-      Uri.of_string @@
-      url("/users/" ++ Sihl_user.Model.User.id(user) ++ "/boards/"),
+      Uri.of_string @@ url("/users/" ++ Sihl.User.id(user) ++ "/boards/"),
     );
   let* body = Cohttp_lwt.Body.to_string(body);
   let boards =
