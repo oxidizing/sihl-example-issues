@@ -3,11 +3,14 @@
  (libraries
   base
   sihl
-  sihl_repo_postgresql
+  sihl_postgresql
+  sihl_admin
+  sihl_session
+  sihl_session_postgresql
   sihl_email
-  sihl_email_repo_postgresql
+  sihl_email_postgresql
   sihl_user
-  sihl_user_repo_postgresql
+  sihl_user_postgresql
   sihl_example_issues
   alcotest
   alcotest-lwt

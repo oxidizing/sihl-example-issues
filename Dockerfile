@@ -13,12 +13,15 @@ WORKDIR app
 COPY sihl_example_issues.opam .
 COPY dune-project .
 
-RUN opam pin add -yn sihl https://github.com/oxidizing/sihl.git\#0.0.29 && \
-        opam pin add -yn sihl_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.29 && \
-        opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.29 && \
-        opam pin add -yn sihl_email_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.29 && \
-        opam pin add -yn sihl_user https://github.com/oxidizing/sihl.git\#0.0.29 && \
-        opam pin add -yn sihl_user_repo_postgresql https://github.com/oxidizing/sihl.git\#0.0.29 && \
+RUN opam pin add -yn sihl https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_postgresql https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_admin https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_session https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_session_postgresql https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_email https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_email_postgresql https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_user https://github.com/oxidizing/sihl.git\#0.0.31 && \
+        opam pin add -yn sihl_user_postgresql https://github.com/oxidizing/sihl.git\#0.0.31 && \
         opam pin add -yn sihl_example_issues . && \
         opam depext -y sihl_example_issues && \
         opam install --deps-only sihl_example_issues
