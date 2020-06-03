@@ -32,16 +32,16 @@ jobs:
           name: Pin sihl packages
           command: |
             # TODO remove this once sihl is in OPAM
-            opam pin add -y -n sihl https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_postgresql https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_admin https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_session https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_session_postgresql https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_admin https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_email_postgresql https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.30
-            opam pin add -y -n sihl_user_postgresql https://github.com/oxidizing/sihl.git\#0.0.30
+            opam pin add -y -n sihl https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_postgresql https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_admin https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_session https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_session_postgresql https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_admin https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_email https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_email_postgresql https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_user https://github.com/oxidizing/sihl.git\#0.0.31
+            opam pin add -y -n sihl_user_postgresql https://github.com/oxidizing/sihl.git\#0.0.31
       - run:
           name: Pin packages
           command: |

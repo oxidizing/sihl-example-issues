@@ -1,6 +1,5 @@
 (executable
   (name Run)
-  (public_name Run)
   (libraries
    base
    sihl
