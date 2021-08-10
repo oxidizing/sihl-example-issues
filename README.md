@@ -1,5 +1,11 @@
 [![CircleCI](https://circleci.com/gh/oxidizing/sihl-example-issues.svg?style=svg&circle-token=1351b6152d0a4c49555dada65d80fa977159028c)](https://circleci.com/gh/oxidizing/sihl-example-issues)
 
+# Deprecated
+
+This project is deprecated. If you want to start a new project use the [template](https://github.com/oxidizing/sihl/tree/master/template) as described [here](https://oxidizing.github.io/sihl/sihl/index.html#app-generation).
+If you want to browse an example Sihl project, check out [sihl-demo](https://github.com/oxidizing/sihl-demo).
+
+
 # Issue Management App
 
 This is a simple app that can be used to manage issues written in Fullstack Reason using the web framework [Sihl](https://github.com/oxidizing/sihl/) and [ReasonReact](https://reasonml.github.io/reason-react/).
